@@ -1,3 +1,3 @@
-# Rate-my-dorm
+# Rate-my-Dorm
 
 App team final project
