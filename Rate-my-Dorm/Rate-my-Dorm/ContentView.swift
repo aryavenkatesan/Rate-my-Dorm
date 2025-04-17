@@ -8,16 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    //instantiate all of the ViewModels 
+    @StateObject private var OnboardingVM = OnboardingViewModel()
+    
+    
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        
+        if OnboardingVM.isUserLoggedIn {
+            BottomBarView()
+        } else {
+            LoginView(vm: OnboardingVM)
+            
         }
-        .padding()
+        
     }
 }
+
 
 #Preview {
     ContentView()
