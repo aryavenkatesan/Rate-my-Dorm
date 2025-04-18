@@ -10,74 +10,90 @@ import SwiftUI
 struct SignupView: View {
     @ObservedObject var vm: OnboardingViewModel
     var body: some View {
-        VStack {
-            Spacer()
-            Text("Signup!")
-                .font(.system(size:34, weight: .bold))
-                .multilineTextAlignment(.center)
-                .padding(32)
-                .foregroundColor(.black)
-            Spacer()
-            
-            Text("Logo here or something")
-            
-            Spacer()
-            
-            Spacer()
-            
-            Spacer()
-            
-//            Divider()
-            TextField("Username", text: $vm.usernameInput)
-                .padding(16)
-            Divider()
-            SecureField("Password", text: $vm.passwordInput)
-                .textContentType(.password)
-                .padding(16)
-            Divider()
-            Picker ("School", selection: $vm.schoolInput) {
-                ForEach(vm.Schools, id: \.self) { school in
-                    Text(school)
+        NavigationStack {
+            VStack {
+                Spacer()
+                Image(systemName: "face.smiling.inverse")
+                    .resizable()
+                    .frame(width: 100, height: 100)
+                    .foregroundColor(Color.blue)
+                    .opacity(0.7)
+                
+                Spacer()
+                
+//                Image("AppLogo")
+                Text("Signup!")
+                //                    .font(.system(.title, design: .rounded, weight: .bold))
+                    .font(.custom("BubbleShineRegular", size: 100))
+                    .fontWeight(.bold)
+                    .opacity(0.75)
+                    .multilineTextAlignment(.center)
+                    .padding(32)
+                    .foregroundColor(.black)
+                
+                
+//                Spacer()
+                
+//                Spacer()
+                
+                Spacer()
+                
+                //            Divider()
+                TextField("Username", text: $vm.usernameInput)
+                    .padding(16)
+                    .background(Color.blue.opacity(0.05))
+                    .cornerRadius(30)
+                //            Divider()
+                SecureField("Password", text: $vm.passwordInput)
+                    .textContentType(.password)
+                    .padding(16)
+                    .background(Color.blue.opacity(0.05))
+                    .cornerRadius(30)
+                //            Divider()
+                Picker ("School", selection: $vm.schoolInput) {
+                    ForEach(vm.Schools, id: \.self) { school in
+                        Text(school)
+                    }
                 }
-            }
-            .padding(.vertical, 8)
-            
-            
-            
-            Spacer()
-            
-            
-            Button {
-                if (vm.usernameInput.isEmpty || vm.passwordInput.isEmpty) {
-                    vm.fieldError()
-                } else {
-                    vm.signup()
-                    vm.resetError()
+                .padding(.vertical, 8)
+                
+                
+                
+                Spacer()
+                
+                
+                Button {
+                    if (vm.usernameInput.isEmpty || vm.passwordInput.isEmpty) {
+                        vm.fieldError()
+                    } else {
+                        vm.signup()
+                        vm.resetError()
+                    }
+                } label: {
+                    Text("Signup")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .font(.system(size: 17, weight: .bold))
                 }
-            } label: {
-                Text("Signup")
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .font(.system(size: 17, weight: .bold))
-            }
-            .buttonStyle(.borderedProminent)
-            .frame(maxWidth: .infinity)
-            .padding(16)
-            
-            Text("\(vm.errormsg)")
-                .foregroundColor(.red)
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity)
                 .padding(16)
-
-            
-            Spacer()
-            
-            Spacer()
-            
-            Spacer()
-            
+                
+                Text("\(vm.errormsg)")
+                    .foregroundColor(.red)
+                    .padding(16)
+                
+                
+                Spacer()
+                
+                Spacer()
+                
+                Spacer()
+                
+            }
+            .padding()
+            .onAppear(perform: vm.resetError)
         }
-        .padding()
-        .onAppear(perform: vm.resetError)
     }
 }
 

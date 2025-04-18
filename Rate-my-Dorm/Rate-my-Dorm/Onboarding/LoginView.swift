@@ -15,34 +15,70 @@ struct LoginView: View {
                 Spacer()
                 Spacer()
                 Text("Welcome!")
-                    .font(.system(size:34, weight: .bold))
+//                    .font(.system(.title, design: .rounded, weight: .bold))
+                    .font(.custom("BubbleShineRegular", size: 100))
+                    .fontWeight(.bold)
+                    .opacity(0.75)
                     .multilineTextAlignment(.center)
                     .padding(32)
                     .foregroundColor(.black)
                 Spacer()
                 
-                Text("Logo here or something")
+//                Text("Logo here or something")
+                Image("AppLogo")
                 
                 Spacer()
                 
                 Spacer()
+//
+                Spacer()
+//
+//                Form {
+                    
+                VStack {
+                    TextField("Username", text: $vm.usernameInput)
+                        .padding(16)
+                        .background(Color.blue.opacity(0.05))
+                        .cornerRadius(30)
+                    
+//                                        Divider()
+                    Text("")
+                    
+                    SecureField("Password", text: $vm.passwordInput)
+                        .textContentType(.password)
+                        .padding(16)
+                        .background(Color.blue.opacity(0.05))
+                        .cornerRadius(30)
+                    
+                }
+//                .background(Color.blue.opacity(0.05))
+//                .cornerRadius(30)
+                    
+                    
+                //}
+//                .scrollContentBackground(.hidden)
+//                .frame(maxWidth: .infinity)
                 
                 Spacer()
-                
-                TextField("Username", text: $vm.usernameInput)
-                    .padding(16)
-                Divider()
-                SecureField("Password", text: $vm.passwordInput)
-                    .textContentType(.password)
-                    .padding(16)
-                
                 Spacer()
+                
                 
                 VStack {
                     
                     Button {
                         if (vm.usernameInput.isEmpty || vm.passwordInput.isEmpty) {
                             vm.fieldError()
+                            /* ------------------------
+                             This is for font debugging don't delete
+                            for familyName in UIFont.familyNames {
+                                print(familyName)
+                                
+                                for fontName in UIFont.fontNames(forFamilyName: familyName) {
+                                    
+                                    print("-- \(fontName)")
+                                }
+                            }
+                             ------------------------ */
                         } else {
                             vm.login()
                             vm.resetError()
@@ -66,7 +102,7 @@ struct LoginView: View {
                         .padding(16)
                 }
                 
-                Spacer()
+//                Spacer()
                 
                 Spacer()
                 
@@ -84,4 +120,3 @@ struct LoginView: View {
     @Previewable @StateObject var previewvm = OnboardingViewModel()
     LoginView(vm: previewvm)
 }
-
