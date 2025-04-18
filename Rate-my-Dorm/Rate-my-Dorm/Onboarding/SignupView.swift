@@ -27,7 +27,7 @@ struct SignupView: View {
             
             Spacer()
             
-//            Divider()
+            
             TextField("Username", text: $vm.usernameInput)
                 .padding(16)
             Divider()
