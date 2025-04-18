@@ -5,3 +5,12 @@
 //  Created by Arya Venkatesan on 4/15/25.
 //
 
+import Foundation
+
+struct Sublease: Identifiable {
+    let id = UUID()
+    var name: String
+    var address: String
+    var price: Double
+    var distance: Double
+}
