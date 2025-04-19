@@ -20,31 +20,30 @@ struct SearchView: View {
             VStack {
                 List {
                     Section(header: Text("Available Subleases")) {
-                        ForEach(viewModel.subleases) { sublease in
+                        ForEach($viewModel.subleases) { $sublease in
                             VStack(alignment: .leading) {
-                                Text(sublease.name)
-                                    .font(.headline)
+                                Text(sublease.name).font(.headline)
                                 Text(sublease.address)
                                 Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                    .font(.subheadline).foregroundColor(.secondary)
                             }
                         }
                     }
                 }
-                
+
                 Button("Add New Sublease") {
                     showAddSheet = true
                 }
                 .padding()
                 .sheet(isPresented: $showAddSheet) {
-                    SubleaseView()
+                    SubleaseView(viewModel: viewModel) // ✅ pass it in
                 }
             }
             .navigationTitle("Search")
         }
     }
 }
+
 
 
 

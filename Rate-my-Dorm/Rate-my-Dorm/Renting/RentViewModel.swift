@@ -4,32 +4,30 @@
 //
 //  Created by Arya Venkatesan on 4/15/25.
 //
-// RentViewModel.swift
 
 import Foundation
 import SwiftUI
 
 @Observable
 class RentViewModel {
-    public var subleases: [Sublease] = []
+    public var rents: [Rent] = []
 
     init() {
         loadDummyData() // Optional: for testing
     }
 
     func loadDummyData() {
-        subleases = [
-            Sublease(name: "Cozy Apt", address: "123 College St", price: 850, distance: 0.5, propertyType: .apartment),
-            Sublease(name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm),
-            Sublease(name: "Shared House", address: "789 Maple Ave", price: 950, distance: 1.2, propertyType: .house)
+        rents = [
+            Rent(name: "Cozy Apt", address: "123 College St", price: 850, distance: 0.5, propertyType: .apartment),
+            Rent(name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm),
+            Rent(name: "Shared House", address: "789 Maple Ave", price: 950, distance: 1.2, propertyType: .house)
         ]
         
-        //add(Sublease(name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm))
+        //add(Rent(name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm))
         //Test code
     }
 
-    func add(_ sublease: Sublease) {
-        subleases.append(sublease)
+    func add(_ rent: Rent) {
+        rents.append(rent)
     }
 }
-
