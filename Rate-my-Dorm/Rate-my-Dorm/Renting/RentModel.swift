@@ -14,3 +14,9 @@ struct Rent: Identifiable {
     var distance: Double
     var propertyType: PropertyType
 }
+
+enum PropertyType: String, CaseIterable, Codable {
+    case apartment
+    case dorm
+    case house
+}

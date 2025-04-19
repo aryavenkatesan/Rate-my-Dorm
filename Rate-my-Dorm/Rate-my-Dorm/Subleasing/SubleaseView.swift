@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct SubleaseView: View {
-    @State private var viewModel = SubleaseViewModel()
-    @State private var rentViewModel = RentViewModel()
+    @State private var viewModel = RentViewModel()
     @Environment(\.dismiss) private var dismiss
 
     @State private var name: String = ""
@@ -55,14 +54,7 @@ struct SubleaseView: View {
                             let sublease = Sublease(
                                 name: name, address: address, price: priceVal, distance: distanceVal, propertyType: selectedType
                                                     )
-                            viewModel.addSublease(
-                                name: name,
-                                address: address,
-                                price: priceVal,
-                                distance: distanceVal,
-                                propertyType: selectedType
-                            )
-                            rentViewModel.add(sublease)
+                            viewModel.add(sublease)
                             
                             statusMessage = "Sublease Added Successfully!" // Success message
                             statusMessageColor = .green // Green for success

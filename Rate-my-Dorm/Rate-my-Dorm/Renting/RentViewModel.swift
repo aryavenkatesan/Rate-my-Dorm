@@ -11,7 +11,7 @@ import SwiftUI
 
 @Observable
 class RentViewModel {
-    @State public var subleases: [Sublease] = []
+    public var subleases: [Sublease] = []
 
     init() {
         loadDummyData() // Optional: for testing
