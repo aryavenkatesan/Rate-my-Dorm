@@ -12,7 +12,7 @@ import SwiftUI
 import Observation
 
 struct SearchView: View {
-    @State private var viewModel = SubleaseViewModel()
+    @State private var viewModel = RentViewModel()
     @State private var showAddSheet = false
 
     var body: some View {
@@ -38,7 +38,7 @@ struct SearchView: View {
                 }
                 .padding()
                 .sheet(isPresented: $showAddSheet) {
-                    SubleaseView(viewModel: viewModel)
+                    SubleaseView()
                 }
             }
             .navigationTitle("Search")
@@ -95,6 +95,6 @@ struct FilterSheetView: View {
 
 
 #Preview {
-    BottomBarView()
+    SearchView()
 }
 

@@ -21,7 +21,7 @@ struct BottomBarView: View {
             Group {
                 switch currentTab {
                 case .Sublease:
-                    SubleaseView(viewModel: SubleaseViewModel())
+                    SubleaseView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.yellow.opacity(0.2))
                 case .Rent:

@@ -1,14 +1,8 @@
-//
-//  SubleaseView.swift
-//  Rate-my-Dorm
-//
-//  Created by Arya Venkatesan on 4/15/25.
-//
-
 import SwiftUI
 
 struct SubleaseView: View {
-    @ObservedObject var viewModel: SubleaseViewModel
+    @State private var viewModel = SubleaseViewModel()
+    @State private var rentViewModel = RentViewModel()
     @Environment(\.dismiss) private var dismiss
 
     @State private var name: String = ""
@@ -17,8 +11,9 @@ struct SubleaseView: View {
     @State private var distance: String = ""
     @State private var selectedType: PropertyType = .apartment
 
-    // Debugging: Store the last action that was taken
-    @State private var debugText: String = ""
+    // Store the status of the operation (success or error)
+    @State private var statusMessage: String = ""
+    @State private var statusMessageColor: Color = .clear
 
     // Check if the form is valid
     var isFormValid: Bool {
@@ -54,11 +49,12 @@ struct SubleaseView: View {
                 // Add Sublease Button
                 Section {
                     Button("Add Sublease") {
-                        // Debugging: Print the form data to console
-                        print("Adding Sublease with values - Name: \(name), Address: \(address), Price: \(price), Distance: \(distance), Type: \(selectedType)")
-                        
-                        // Try to add the sublease
+                        // Validate and add the sublease
                         if let priceVal = Double(price), let distanceVal = Double(distance) {
+                            // Update the UI with success message
+                            let sublease = Sublease(
+                                name: name, address: address, price: priceVal, distance: distanceVal, propertyType: selectedType
+                                                    )
                             viewModel.addSublease(
                                 name: name,
                                 address: address,
@@ -66,22 +62,26 @@ struct SubleaseView: View {
                                 distance: distanceVal,
                                 propertyType: selectedType
                             )
-                            debugText = "Sublease Added!" // Update debug message
-                            print("Sublease successfully added!")
+                            rentViewModel.add(sublease)
+                            
+                            statusMessage = "Sublease Added Successfully!" // Success message
+                            statusMessageColor = .green // Green for success
                             dismiss() // Dismiss the form after adding
                         } else {
-                            // If the price or distance is invalid
-                            debugText = "Invalid price or distance" // Show error if input is invalid
-                            print("Failed to add sublease: Invalid price or distance") // Log failure message
+                            // Update the UI with error message
+                            statusMessage = "Invalid price or distance. Please check your inputs."
+                            statusMessageColor = .red // Red for error
                         }
                     }
-                    .disabled(!isFormValid) // Disable button if the form is invalid
+                    .disabled(!isFormValid) // Disable the button if the form is invalid
                 }
 
-                // Debugging: Show status
+                // Status message Section
                 Section {
-                    Text(debugText) // Display the current debug text
-                        .foregroundColor(debugText == "Sublease Added!" ? .green : .red)
+                    Text(statusMessage) // Display the status message
+                        .foregroundColor(statusMessageColor) // Show message in corresponding color
+                        .padding()
+                        .font(.body)
                 }
             }
             .navigationTitle("New Sublease")
@@ -97,5 +97,5 @@ struct SubleaseView: View {
 }
 
 #Preview {
-    SubleaseView(viewModel: SubleaseViewModel())
+    SubleaseView()
 }

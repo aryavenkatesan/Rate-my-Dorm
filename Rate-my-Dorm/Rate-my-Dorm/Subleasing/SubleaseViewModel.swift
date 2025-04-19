@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
 
-@Observable class SubleaseViewModel: ObservableObject {
-    var subleases: [Sublease] = []
+@Observable
+class SubleaseViewModel {
+    public var subleases: [Sublease] = []
 
     func addSublease(name: String, address: String, price: Double, distance: Double, propertyType: PropertyType) {
         let new = Sublease(name: name, address: address, price: price, distance: distance, propertyType: propertyType)
