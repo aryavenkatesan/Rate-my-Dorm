@@ -9,38 +9,44 @@
 // its up to you tho
 
 import SwiftUI
+import Observation
 
 struct SearchView: View {
-    @State private var name: String = ""
-    @State private var location: String = ""
-    @State private var showFilters: Bool = false
+    @State private var viewModel = SubleaseViewModel()
+    @State private var showAddSheet = false
 
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("Search Criteria")) {
-                    TextField("Name", text: $name)
-                    TextField("Location", text: $location)
+            VStack {
+                List {
+                    Section(header: Text("Available Subleases")) {
+                        ForEach(viewModel.subleases) { sublease in
+                            VStack(alignment: .leading) {
+                                Text(sublease.name)
+                                    .font(.headline)
+                                Text(sublease.address)
+                                Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
                 }
-
-                Section {
-                    Button("Filters") {
-                        showFilters.toggle()
-                    }
-                    .sheet(isPresented: $showFilters) {
-                        FilterSheetView()
-                    }
-
-                    Button("Search") {
-                        // Perform search logic here
-                        print("Searching for \(name) in \(location)")
-                    }
+                
+                Button("Add New Sublease") {
+                    showAddSheet = true
+                }
+                .padding()
+                .sheet(isPresented: $showAddSheet) {
+                    SubleaseView(viewModel: viewModel)
                 }
             }
             .navigationTitle("Search")
         }
     }
 }
+
+
 
 struct FilterSheetView: View {
     @Environment(\.dismiss) var dismiss

@@ -8,44 +8,52 @@
 import SwiftUI
 
 struct SubleaseView: View {
-    @StateObject private var viewModel = SubleaseViewModel()
+    @State var viewModel: SubleaseViewModel
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var name: String = ""
+    @State private var address: String = ""
+    @State private var price: String = ""
+    @State private var distance: String = ""
 
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("New Sublease")) {
-                    TextField("Name", text: $viewModel.name)
-                    TextField("Address", text: $viewModel.address)
-                    TextField("Price", text: $viewModel.price)
+                Section(header: Text("Sublease Info")) {
+                    TextField("Name", text: $name)
+                    TextField("Address", text: $address)
+                    TextField("Price", text: $price)
                         .keyboardType(.decimalPad)
-                    TextField("Distance (mi)", text: $viewModel.distance)
+                    TextField("Distance (mi)", text: $distance)
                         .keyboardType(.decimalPad)
-                    
-                    Button("Add Sublease") {
-                        viewModel.addSublease()
-                    }
                 }
 
-                Section(header: Text("Subleases")) {
-                    ForEach(viewModel.subleases) { sublease in
-                        VStack(alignment: .leading) {
-                            Text(sublease.name)
-                                .font(.headline)
-                            Text(sublease.address)
-                            Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.vertical, 4)
+                Button("Add Sublease") {
+                    if let priceVal = Double(price), let distanceVal = Double(distance) {
+                        viewModel.addSublease(
+                            name: name,
+                            address: address,
+                            price: priceVal,
+                            distance: distanceVal
+                        )
+                        dismiss()
                     }
                 }
             }
-            .navigationTitle("Subleases")
+            .navigationTitle("New Sublease")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }
 
 
+
 #Preview {
-    SubleaseView()
+    SubleaseView(viewModel: SubleaseViewModel())
 }
