@@ -10,8 +10,8 @@ import Foundation
 @Observable class SubleaseViewModel: ObservableObject {
     var subleases: [Sublease] = []
 
-    func addSublease(name: String, address: String, price: Double, distance: Double) {
-        let new = Sublease(name: name, address: address, price: price, distance: distance)
+    func addSublease(name: String, address: String, price: Double, distance: Double, propertyType: PropertyType) {
+        let new = Sublease(name: name, address: address, price: price, distance: distance, propertyType: propertyType)
         subleases.append(new)
     }
 }

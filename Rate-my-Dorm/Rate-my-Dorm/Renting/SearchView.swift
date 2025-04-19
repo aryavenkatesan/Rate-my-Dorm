@@ -93,12 +93,6 @@ struct FilterSheetView: View {
     }
 }
 
-enum PropertyType: String, CaseIterable {
-    case apartment
-    case dorm
-    case house
-}
-
 
 #Preview {
     BottomBarView()
