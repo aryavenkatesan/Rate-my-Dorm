@@ -11,7 +11,7 @@ import SwiftUI
 
 @Observable
 class RentViewModel {
-    var subleases: [Sublease] = []
+    @State public var subleases: [Sublease] = []
 
     init() {
         loadDummyData() // Optional: for testing
@@ -23,6 +23,9 @@ class RentViewModel {
             Sublease(name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm),
             Sublease(name: "Shared House", address: "789 Maple Ave", price: 950, distance: 1.2, propertyType: .house)
         ]
+        
+        //add(Sublease(name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm))
+        //Test code
     }
 
     func add(_ sublease: Sublease) {
