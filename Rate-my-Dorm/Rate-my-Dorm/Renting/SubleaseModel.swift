@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct Rent: Identifiable {
+struct Sublease: Identifiable {
     let id = UUID()
     var name: String
     var address: String

@@ -11,12 +11,12 @@
 import SwiftUI
 
 struct ListView: View {
-    @State private var rentViewModel = RentViewModel()
+    @State private var vm = RentViewModel()
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(rentViewModel.subleases) { sublease in
+                ForEach($vm.subleases, id: \.id) {$sublease in
                     VStack(alignment: .leading) {
                         Text(sublease.name)
                             .font(.headline)

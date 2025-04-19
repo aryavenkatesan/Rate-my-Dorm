@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SubleaseView: View {
-    @State private var viewModel = RentViewModel()
+    @State private var vm = RentViewModel()
     @Environment(\.dismiss) private var dismiss
 
     @State private var name: String = ""
@@ -20,30 +20,33 @@ struct SubleaseView: View {
     var body: some View {
         NavigationView {
             Form {
-                // Input sections here ...
+                Section(header: Text("Sublease Info")) {
+                  TextField("Name",    text: $vm.newSubleaseName)
+                  TextField("Address", text: $vm.newSubleaseAddress)
+
+                  // use `format:` not `formatter:`
+                  TextField("Price",
+                            value: $vm.newSubleasePrice,
+                            format: .number)
+                    .keyboardType(.decimalPad)
+
+                  TextField("Distance (mi)",
+                            value: $vm.newSubleaseDistance,
+                            format: .number)
+                    .keyboardType(.decimalPad)
+
+                  Picker("Type", selection: $vm.newSubleasePropertyType) {
+                    ForEach(PropertyType.allCases, id:\.self) {
+                      Text($0.rawValue.capitalized)
+                    }
+                  }
+                }
 
                 Section {
-                    Button("Add Sublease") {
-                        if let priceVal = Double(price), let distanceVal = Double(distance) {
-                            let sublease = Rent(
-                                name: name,
-                                address: address,
-                                price: priceVal,
-                                distance: distanceVal,
-                                propertyType: selectedType
-                            )
-
-                            viewModel.add(sublease)
-                            statusMessage = "Sublease Added Successfully!"
-                            statusMessageColor = .green
-                            dismiss()
-                        } else {
-                            statusMessage = "Invalid price or distance."
-                            statusMessageColor = .red
-                        }
-                    }
-                    .disabled(!isFormValid)
+                  Button("Add Sublease", action: vm.add)
+                    .disabled(vm.newSubleaseName.isEmpty || vm.newSubleaseAddress.isEmpty)
                 }
+
 
                 Section {
                     Text(statusMessage)
@@ -62,7 +65,6 @@ struct SubleaseView: View {
         }
     }
 }
-
 
 #Preview {
     SubleaseView()
