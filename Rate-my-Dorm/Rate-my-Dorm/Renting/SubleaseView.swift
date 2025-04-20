@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SubleaseView: View {
-    @State private var vm = RentViewModel()
+    @State var vm:RentViewModel
     @Environment(\.dismiss) private var dismiss
 
     @State private var name: String = ""
@@ -67,5 +67,5 @@ struct SubleaseView: View {
 }
 
 #Preview {
-    SubleaseView()
+    SubleaseView(vm:RentViewModel())
 }
