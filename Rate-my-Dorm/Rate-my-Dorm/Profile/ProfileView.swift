@@ -12,32 +12,98 @@ struct ProfileView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                Image(systemName: "person.crop.circle")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
-                    .padding()
+            ZStack {
+                Color(.blue)
+                    .ignoresSafeArea()
+                    .opacity(0.15)
                 
+                // Large Circle Shape
                 
+                Circle()
+                    .fill(.blue)
+                    .frame(width: 1500, height: 1500)
+                    .offset(x: 0, y: -870) // Adjust position as needed
+                    //.blendMode(.) // Blends with background
+                    .opacity(0.8)
                 
+                Circle()
+                    .fill(.blue)
+                    .frame(width: 1500, height: 1500)
+                    .offset(x: 0, y: -790) // Adjust position as needed
+                    //.blendMode(.) // Blends with background
+                    .opacity(0.5)
                 
-                Button {
-                    print("logout")
-                    onboardingVM.logout()
+                Circle()
+                    .fill(.blue)
+                    .frame(width: 1500, height: 1500)
+                    .offset(x: 0, y: -710) // Adjust position as needed
+                    //.blendMode(.) // Blends with background
+                    .opacity(0.3)
+                
+                VStack {
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
                     
-                } label: {
-                    Text("Logout")
-                }
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    onboardingVM.logout()
-                }) {
-                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                    
+                    VStack {
+                        
+                        Image(systemName: "person.crop.circle")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150, height: 150)
+                            .clipShape(Circle())
+                            .padding(.top, 100)
+                        
+                        Text("Username:  \(onboardingVM.usernameActual)")
+                            .fontWeight(.black)
+                            .font(.custom("HoeflerText-Regular", size: 32))
+                            .opacity(0.75)
+                            .multilineTextAlignment(.center)
+                            .padding(.top, 32)
+                            .padding(.bottom, 0)
+                            .foregroundColor(.black)
+                        
+                        Text("School: \(onboardingVM.schoolInput)")
+                            .fontWeight(.black)
+                            .font(.custom("HoeflerText-Regular", size: 26))
+                            .opacity(0.75)
+                            .multilineTextAlignment(.center)
+                            .padding(42)
+                            .foregroundColor(.black)
+                            .offset(x: 0, y: -7)
+                    }
+                    
+                    Spacer()
+                    Spacer()
+                    
+                    
+                    Button {
+                        print("logout")
+                        onboardingVM.logout()
+                        
+                    } label: {
+                        HStack {
+                            Text("Logout:")
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                        }
+                        .fontWeight(.black)
+                        .font(.custom("AmericanTypewriter", size: 24))
+                        .padding(32)
+                        .foregroundColor(.white) // Changed text color to white
+                        .frame(height: 50) // Fixed height
+                        .frame(maxWidth: 250)
+                    }
+                    .background(Color(.systemBlue).opacity(0.5)) // Light blue background
+                    .clipShape(.capsule)
+                    
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    
                 }
             }
         }

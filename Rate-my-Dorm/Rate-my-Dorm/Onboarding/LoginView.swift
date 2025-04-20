@@ -69,7 +69,7 @@ struct LoginView: View {
                         if (vm.usernameInput.isEmpty || vm.passwordInput.isEmpty) {
                             vm.fieldError()
                             /* ------------------------
-                             This is for font debugging don't delete
+                             //This is for font debugging don't delete
                             for familyName in UIFont.familyNames {
                                 print(familyName)
                                 
@@ -112,7 +112,7 @@ struct LoginView: View {
                 
             }
             .padding()
-            .onAppear(perform: vm.resetAll  )
+            .onAppear(perform: vm.resetAll)
         }
     }
 }
