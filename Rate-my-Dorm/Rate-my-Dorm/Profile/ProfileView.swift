@@ -11,13 +11,35 @@ struct ProfileView: View {
     var onboardingVM: OnboardingViewModel
     
     var body: some View {
-        Text("Profile View")
-        Button {
-            print("logout")
-            onboardingVM.logout()
-            
-        } label: {
-            Text("Logout")
+        NavigationView {
+            VStack {
+                Image(systemName: "person.crop.circle")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                    .clipShape(Circle())
+                    .padding()
+                
+                
+                
+                
+                Button {
+                    print("logout")
+                    onboardingVM.logout()
+                    
+                } label: {
+                    Text("Logout")
+                }
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    onboardingVM.logout()
+                }) {
+                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                }
+            }
         }
     }
 }

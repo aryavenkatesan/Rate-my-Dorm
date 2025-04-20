@@ -98,6 +98,6 @@ class OnboardingViewModel: ObservableObject {
         isUserLoggedIn = false
         userID = ""
         AuthToken = ""
-        resetError()
+        resetAll()
     }
 }
