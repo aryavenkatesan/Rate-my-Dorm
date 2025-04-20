@@ -16,7 +16,7 @@ struct ContentView: View {
     var body: some View {
         
         if OnboardingVM.isUserLoggedIn {
-            BottomBarView()
+            BottomBarView(onboardingVM: OnboardingVM)
         } else {
             LoginView(vm: OnboardingVM)
             

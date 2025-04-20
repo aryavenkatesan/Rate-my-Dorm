@@ -8,11 +8,22 @@
 import SwiftUI
 
 struct ProfileView: View {
+    var onboardingVM: OnboardingViewModel
+    
     var body: some View {
         Text("Profile View")
+        Button {
+            print("logout")
+            onboardingVM.logout()
+            
+        } label: {
+            Text("Logout")
+        }
     }
 }
 
 #Preview {
-    ProfileView()
+    let previewvm = OnboardingViewModel()
+
+    BottomBarView(onboardingVM: previewvm)
 }

@@ -134,6 +134,9 @@ private struct FilterSheetView: View {
 
 
 #Preview {
-    SearchView()
+    let previewvm = OnboardingViewModel()
+
+    BottomBarView(onboardingVM: previewvm)
+    
 }
 

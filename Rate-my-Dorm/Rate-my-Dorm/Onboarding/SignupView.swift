@@ -66,8 +66,10 @@ struct SignupView: View {
                     if (vm.usernameInput.isEmpty || vm.passwordInput.isEmpty) {
                         vm.fieldError()
                     } else {
-                        vm.signup()
-                        vm.resetError()
+                        Task {
+                            await vm.signup()
+//                            vm.resetError()
+                        }
                     }
                 } label: {
                     Text("Signup")
@@ -92,7 +94,7 @@ struct SignupView: View {
                 
             }
             .padding()
-            .onAppear(perform: vm.resetError)
+            .onAppear(perform: vm.resetAll)
         }
     }
 }
