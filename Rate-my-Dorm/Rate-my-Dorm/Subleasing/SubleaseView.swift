@@ -47,5 +47,8 @@ struct SubleaseView: View {
 
 
 #Preview {
-    SubleaseView()
+    let previewvm = OnboardingViewModel()
+
+    BottomBarView(onboardingVM: previewvm)
+    
 }

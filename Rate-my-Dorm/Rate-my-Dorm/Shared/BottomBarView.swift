@@ -11,12 +11,17 @@ struct BottomBarView: View {
     //tab components
     @State var currentTab: Tab = .Rent
     @Namespace var animation
-    init () {
+    @ObservedObject var Onboardingvm: OnboardingViewModel
+    
+    init (onboardingVM: OnboardingViewModel) {
         UITabBar.appearance().isHidden = true
+        self.Onboardingvm = onboardingVM
+        
     }
     
     var body: some View {
         ZStack(alignment: .bottom) {
+            
             // Show the current view full screen.
             Group {
                 switch currentTab {
@@ -29,7 +34,7 @@ struct BottomBarView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.blue.opacity(0.2))
                 case .Profile:
-                    ProfileView()
+                    ProfileView(onboardingVM: Onboardingvm)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.green.opacity(0.2))
                 }
@@ -116,7 +121,9 @@ var body: some View {
     // MARK: - Preview
 struct BottomBarView_Previews: PreviewProvider {
     static var previews: some View {
-        BottomBarView()
+        let previewvm = OnboardingViewModel()
+
+        BottomBarView(onboardingVM: previewvm)
     }
 }
 

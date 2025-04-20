@@ -95,6 +95,9 @@ enum PropertyType: String, CaseIterable {
 
 
 #Preview {
-    BottomBarView()
+    let previewvm = OnboardingViewModel()
+
+    BottomBarView(onboardingVM: previewvm)
+    
 }
 

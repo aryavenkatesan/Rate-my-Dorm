@@ -80,8 +80,10 @@ struct LoginView: View {
                             }
                              ------------------------ */
                         } else {
-                            vm.login()
-                            vm.resetError()
+                            Task {
+                                await vm.login()
+                                //vm.resetError()
+                            }
                         }
                     } label: {
                         Text("Login")
@@ -110,7 +112,7 @@ struct LoginView: View {
                 
             }
             .padding()
-            .onAppear(perform: vm.resetError)
+            .onAppear(perform: vm.resetAll  )
         }
     }
 }
