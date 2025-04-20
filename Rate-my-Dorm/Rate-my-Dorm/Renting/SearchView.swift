@@ -5,9 +5,6 @@
 //  Created by Arya Venkatesan on 4/15/25.
 //
 
-// I think you should implement the filters as a sheet and not a seperate view
-// its up to you tho
-
 import SwiftUI
 
 struct SearchView: View {
@@ -35,32 +32,37 @@ struct SearchView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 12) {
-                // Search field
-                TextField("Search by name or address", text: $searchText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
+                VStack(spacing: 8) {
+                    // Search field
+                    TextField("Search by name or address", text: $searchText)
+                        .padding(8)
+                        .background(Color.blue.opacity(0.05))
+                        .cornerRadius(10)
 
-                // Filter + Search buttons
-                HStack {
-                    Button("Filters") {
-                        showFilterSheet = true
-                    }
-                    .sheet(isPresented: $showFilterSheet) {
-                        FilterSheetView(
-                            maxPrice: $maxPrice,
-                            maxDistance: $maxDistance,
-                            selectedType: $selectedType
-                        )
-                    }
+                    // Filter + Search buttons
+                    HStack {
+                        Button("Filters") {
+                            showFilterSheet = true
+                        }
+                        .font(.system(size:17))
+                        .sheet(isPresented: $showFilterSheet) {
+                            FilterSheetView(
+                                maxPrice: $maxPrice,
+                                maxDistance: $maxDistance,
+                                selectedType: $selectedType
+                            )
+                        }
 
-                    Spacer()
+                        Spacer()
 
-                    Button("Search") {
-                        showResults = true
+                        Button("Search") {
+                            showResults = true
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .font(.system(size: 17, weight:.bold))
                     }
-                    .buttonStyle(.borderedProminent)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal) // Shared padding aligns everything
 
                 // Search results
                 if showResults {
@@ -131,13 +133,10 @@ private struct FilterSheetView: View {
     }
 }
 
-
-
 #Preview {
     let previewvm1 = OnboardingViewModel()
     let previewvm2 = RentViewModel()
 
-    BottomBarView(onboardingVM: previewvm1, rentVM: RentViewModel())
-    
+    BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
 }
 
