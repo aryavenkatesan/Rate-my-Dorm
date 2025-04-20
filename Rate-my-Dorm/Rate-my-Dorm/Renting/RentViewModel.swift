@@ -50,4 +50,9 @@ class RentViewModel: ObservableObject {
         newSubleasePropertyType = PropertyType.apartment
     }
        
+    func toggleLike(for sublease: Sublease) {
+        if let index = subleases.firstIndex(where: {$0.id == sublease.id}) {
+            subleases[index].liked.toggle()
+        }
+    }
 }

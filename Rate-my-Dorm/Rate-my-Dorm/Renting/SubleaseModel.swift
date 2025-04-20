@@ -13,6 +13,7 @@ struct Sublease: Identifiable {
     var price: Double
     var distance: Double
     var propertyType: PropertyType
+    var liked: Bool = false
 }
 
 enum PropertyType: String, CaseIterable, Codable {

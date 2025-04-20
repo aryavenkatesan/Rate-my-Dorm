@@ -1,10 +1,3 @@
-//
-//  SearchView.swift
-//  Rate-my-Dorm
-//
-//  Created by Arya Venkatesan on 4/15/25.
-//
-
 import SwiftUI
 
 struct SearchView: View {
@@ -33,13 +26,11 @@ struct SearchView: View {
         NavigationView {
             VStack(spacing: 12) {
                 VStack(spacing: 8) {
-                    // Search field
                     TextField("Search by name or address", text: $searchText)
                         .padding(8)
                         .background(Color.blue.opacity(0.05))
                         .cornerRadius(10)
 
-                    // Filter + Search buttons
                     HStack {
                         Button("Filters") {
                             showFilterSheet = true
@@ -64,30 +55,43 @@ struct SearchView: View {
                 }
                 .padding(.horizontal)
 
-                // Search results
                 if showResults {
-                    ZStack {
-                        Color.white.ignoresSafeArea() // White background
-
-                        List {
+                    ScrollView {
+                        LazyVStack(spacing: 12) {
                             if filteredSubleases.isEmpty {
                                 Text("No results found.")
                                     .foregroundColor(.gray)
+                                    .padding()
                             } else {
                                 ForEach(filteredSubleases) { sublease in
-                                    VStack(alignment: .leading) {
-                                        Text(sublease.name).font(.headline)
-                                        Text(sublease.address)
-                                        Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(sublease.name)
+                                                .font(.headline)
+                                            Text(sublease.address)
+                                            Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
+                                                .font(.subheadline)
+                                                .foregroundColor(.secondary)
+                                        }
+
+                                        Spacer()
+
+                                        Button(action: {
+                                            vm.toggleLike(for: sublease)
+                                        }) {
+                                            Image(systemName: sublease.liked ? "heart.fill" : "heart")
+                                                .foregroundColor(sublease.liked ? .red : .gray)
+                                                .imageScale(.large)
+                                        }
                                     }
-                                    .padding(.vertical, 4)
+                                    .padding()
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(12)
+                                    .padding(.horizontal)
                                 }
                             }
                         }
-                        .scrollContentBackground(.hidden)
-                        .background(Color.white)
+                        .padding(.top)
                     }
                 }
 
@@ -146,4 +150,3 @@ private struct FilterSheetView: View {
 
     BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
 }
-
