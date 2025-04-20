@@ -19,22 +19,34 @@ class RentViewModel: ObservableObject {
         
     @Published var newSubleaseName: String = ""
     @Published var newSubleaseAddress: String = ""
-    @Published var newSubleasePrice: Double = 0.0
-    @Published var newSubleaseDistance:Double = 0.0
+    @Published var newSubleasePrice: Double? = nil
+    @Published var newSubleaseDistance:Double? = nil
     @Published var newSubleasePropertyType = PropertyType.apartment
 
     func add() {
-        let newSublease = Sublease(name: newSubleaseName, address: newSubleaseAddress, price: newSubleasePrice, distance: newSubleaseDistance, propertyType: newSubleasePropertyType)
-        subleases.append(newSublease);
+        guard let price = newSubleasePrice, let distance = newSubleaseDistance else {
+            print("Price or distance is nil. Cannot add sublease.")
+            return
+        }
+        
+        let newSublease = Sublease(
+            name: newSubleaseName,
+            address: newSubleaseAddress,
+            price: price,
+            distance: distance,
+            propertyType: newSubleasePropertyType
+        )
+        subleases.append(newSublease)
         
         resetSublease()
     }
+
     
     func resetSublease(){
         newSubleaseName = ""
         newSubleaseAddress = ""
-        newSubleasePrice = 0.0
-        newSubleaseDistance = 0.0
+        newSubleasePrice = nil
+        newSubleaseDistance = nil
         newSubleasePropertyType = PropertyType.apartment
     }
        

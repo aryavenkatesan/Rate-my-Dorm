@@ -62,25 +62,32 @@ struct SearchView: View {
                         .font(.system(size: 17, weight:.bold))
                     }
                 }
-                .padding(.horizontal) // Shared padding aligns everything
+                .padding(.horizontal)
 
                 // Search results
                 if showResults {
-                    List {
-                        if filteredSubleases.isEmpty {
-                            Text("No results found.")
-                                .foregroundColor(.gray)
-                        } else {
-                            ForEach(filteredSubleases) { sublease in
-                                VStack(alignment: .leading) {
-                                    Text(sublease.name).font(.headline)
-                                    Text(sublease.address)
-                                    Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
+                    ZStack {
+                        Color.white.ignoresSafeArea() // White background
+
+                        List {
+                            if filteredSubleases.isEmpty {
+                                Text("No results found.")
+                                    .foregroundColor(.gray)
+                            } else {
+                                ForEach(filteredSubleases) { sublease in
+                                    VStack(alignment: .leading) {
+                                        Text(sublease.name).font(.headline)
+                                        Text(sublease.address)
+                                        Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .padding(.vertical, 4)
                                 }
                             }
                         }
+                        .scrollContentBackground(.hidden)
+                        .background(Color.white)
                     }
                 }
 

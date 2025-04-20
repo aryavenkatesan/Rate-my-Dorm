@@ -46,7 +46,13 @@ struct SubleaseView: View {
                         .background(Color.accentColor)
                         .foregroundColor(.white)
                         .cornerRadius(10)
-                        .disabled(vm.newSubleaseName.isEmpty || vm.newSubleaseAddress.isEmpty)
+                        .disabled(
+                            vm.newSubleaseName.isEmpty ||
+                            vm.newSubleaseAddress.isEmpty ||
+                            vm.newSubleasePrice == nil ||
+                            vm.newSubleaseDistance == nil
+                        )
+
 
                     if !statusMessage.isEmpty {
                         Text(statusMessage)
