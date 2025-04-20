@@ -11,7 +11,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    @State private var vm = RentViewModel()
+    @ObservedObject var vm: RentViewModel
     @State private var showFilterSheet = false
 
     @State private var searchText: String = ""
@@ -134,9 +134,10 @@ private struct FilterSheetView: View {
 
 
 #Preview {
-    let previewvm = OnboardingViewModel()
+    let previewvm1 = OnboardingViewModel()
+    let previewvm2 = RentViewModel()
 
-    BottomBarView(onboardingVM: previewvm)
+    BottomBarView(onboardingVM: previewvm1, rentVM: RentViewModel())
     
 }
 

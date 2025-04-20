@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SubleaseView: View {
-    @State var vm:RentViewModel
+    @ObservedObject var vm: RentViewModel
     @Environment(\.dismiss) private var dismiss
 
     @State private var name: String = ""
@@ -21,13 +21,12 @@ struct SubleaseView: View {
         NavigationView {
             Form {
                 Section(header: Text("Sublease Info")) {
-                  TextField("Name",    text: $vm.newSubleaseName)
+                  TextField("Name", text: $vm.newSubleaseName)
                   TextField("Address", text: $vm.newSubleaseAddress)
 
                   // use `format:` not `formatter:`
                   TextField("Price",
-                            value: $vm.newSubleasePrice,
-                            format: .number)
+                            value: $vm.newSubleasePrice, format: .number)
                     .keyboardType(.decimalPad)
 
                   TextField("Distance (mi)",
@@ -67,5 +66,9 @@ struct SubleaseView: View {
 }
 
 #Preview {
-    SubleaseView(vm:RentViewModel())
+    let previewvm1 = OnboardingViewModel()
+    let previewvm2 = RentViewModel()
+
+    BottomBarView(onboardingVM: previewvm1, rentVM: RentViewModel())
+    
 }

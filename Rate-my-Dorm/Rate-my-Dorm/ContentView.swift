@@ -10,18 +10,16 @@ import SwiftUI
 struct ContentView: View {
     //instantiate all of the ViewModels 
     @StateObject private var OnboardingVM = OnboardingViewModel()
-    
-    
+    @StateObject private var RentVM = RentViewModel()
     
     var body: some View {
         
         if OnboardingVM.isUserLoggedIn {
-            BottomBarView(onboardingVM: OnboardingVM)
+            BottomBarView(onboardingVM: OnboardingVM, rentVM: RentVM)
         } else {
             LoginView(vm: OnboardingVM)
             
         }
-        
     }
 }
 

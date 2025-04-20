@@ -12,10 +12,12 @@ struct BottomBarView: View {
     @State var currentTab: Tab = .Rent
     @Namespace var animation
     @ObservedObject var Onboardingvm: OnboardingViewModel
+    @ObservedObject var Rentvm: RentViewModel
     
-    init (onboardingVM: OnboardingViewModel) {
+    init (onboardingVM: OnboardingViewModel, rentVM: RentViewModel) {
         UITabBar.appearance().isHidden = true
         self.Onboardingvm = onboardingVM
+        self.Rentvm = rentVM
         
     }
     
@@ -26,11 +28,11 @@ struct BottomBarView: View {
             Group {
                 switch currentTab {
                 case .Sublease:
-                    SubleaseView(vm:RentViewModel())
+                    SubleaseView(vm: Rentvm)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.yellow.opacity(0.2))
                 case .Rent:
-                    SearchView()
+                    SearchView(vm: Rentvm)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.blue.opacity(0.2))
                 case .Profile:
@@ -121,9 +123,10 @@ var body: some View {
     // MARK: - Preview
 struct BottomBarView_Previews: PreviewProvider {
     static var previews: some View {
-        let previewvm = OnboardingViewModel()
+        let previewvm1 = OnboardingViewModel()
+        let previewvm2 = RentViewModel()
 
-        BottomBarView(onboardingVM: previewvm)
+        BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
     }
 }
 
