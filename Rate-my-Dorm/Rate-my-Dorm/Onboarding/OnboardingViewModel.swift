@@ -17,6 +17,7 @@ class OnboardingViewModel: ObservableObject {
     @Published var schoolInput: String = "UNC Chapel Hill"
     @Published var userID: String = ""
     @Published var AuthToken: String = ""
+    @Published var usernameActual: String = ""
     
     let Schools: [String] = ["UNC Chapel Hill", "UNC Charlotte", "Duke", "NC State"]
     
@@ -35,6 +36,7 @@ class OnboardingViewModel: ObservableObject {
             if response.stackTrace == nil {
                 AuthToken = response.accessToken!
                 userID = response._id!
+                usernameActual = usernameInput
                 isUserLoggedIn = true
             } else {
                 errormsg = "Error: \(response.message!)"
@@ -59,6 +61,7 @@ class OnboardingViewModel: ObservableObject {
             if response.stackTrace == nil {
                 AuthToken = response.accessToken!
                 userID = response._id!
+                usernameActual = usernameInput
                 isUserLoggedIn = true
             } else {
                 errormsg = "Error: \(response.message!)"
