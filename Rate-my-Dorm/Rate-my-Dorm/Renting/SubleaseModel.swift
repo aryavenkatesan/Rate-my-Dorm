@@ -13,6 +13,8 @@ struct Sublease: Identifiable {
     var price: Double
     var distance: Double
     var propertyType: PropertyType
+    var email: String
+    var phoneNumber: String
     var liked: Bool = false
 }
 

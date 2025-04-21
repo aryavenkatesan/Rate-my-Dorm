@@ -72,6 +72,12 @@ struct SearchView: View {
                                             Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
+                                            Text("\(sublease.email)")
+                                                .font(.subheadline)
+                                                .foregroundColor(.secondary)
+                                            Text("\(sublease.phoneNumber)")
+                                                .font(.subheadline)
+                                                .foregroundColor(.secondary)
                                         }
 
                                         Spacer()
