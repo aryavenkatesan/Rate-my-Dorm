@@ -28,11 +28,11 @@ struct BottomBarView: View {
             Group {
                 switch currentTab {
                 case .Sublease:
-                    SubleaseView(vm: Rentvm)
+                    SubleaseView(vm: Rentvm, username: Onboardingvm.usernameActual)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.yellow.opacity(0.2))
                 case .Rent:
-                    SearchView(vm: Rentvm)
+                    SearchView(vm: Rentvm, username: Onboardingvm.usernameActual)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.blue.opacity(0.2))
                 case .Profile:

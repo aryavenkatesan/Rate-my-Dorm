@@ -28,7 +28,7 @@ const listingSchema = mongoose.Schema({
     },
     propertyType: {
         type: String,
-        enum: ["apartment", "dorm", "house"], // Enforce allowed values
+        enum: [".apartment", ".dorm", ".house"], // Enforce allowed values
         required: true,
     },
     contactEmail: {
@@ -38,7 +38,19 @@ const listingSchema = mongoose.Schema({
     heartList: {
         type: [String],
         required: false,
-    }
+    },
+    phoneNumber: {
+        type: String,
+        required: false,
+    },
+    rating: {
+        type: Number,
+        required: false,
+    },
+    comments: {
+        type: String,
+        required: false,
+    },
 });
 
 module.exports = mongoose.model("Listing", listingSchema)

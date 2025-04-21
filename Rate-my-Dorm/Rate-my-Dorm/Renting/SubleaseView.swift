@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SubleaseView: View {
     @ObservedObject var vm: RentViewModel
+    var username: String
     @Environment(\.dismiss) private var dismiss
 
     @State private var statusMessage: String = ""
@@ -82,20 +83,26 @@ struct SubleaseView: View {
                     }
 
                     // Add Sublease Button
-                    Button("Add Sublease", action: vm.add)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.accentColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .disabled(
-                            vm.newSubleaseName.isEmpty ||
-                            vm.newSubleaseAddress.isEmpty ||
-                            vm.newSubleaseEmail.isEmpty ||
-                            vm.newSubleasePhoneNumber.isEmpty ||
-                            vm.newSubleasePrice == nil ||
-                            vm.newSubleaseDistance == nil
-                        )
+                    Button {
+                        Task {
+                            await vm.add(username: username)
+                        }
+                    } label: {
+                        Text("Add Sublease")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .disabled(
+                        vm.newSubleaseName.isEmpty ||
+                        vm.newSubleaseAddress.isEmpty ||
+                        vm.newSubleaseEmail.isEmpty ||
+                        vm.newSubleasePhoneNumber.isEmpty ||
+                        vm.newSubleasePrice == nil ||
+                        vm.newSubleaseDistance == nil
+                    )
 
                     // Status Message
                     if !statusMessage.isEmpty {

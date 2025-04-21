@@ -3,6 +3,7 @@ import SwiftUI
 struct SearchView: View {
     @ObservedObject var vm: RentViewModel
     @State private var showFilterSheet = false
+    let username: String 
 
     @State private var searchText: String = ""
     @State private var maxPrice: Double = 5000
@@ -50,6 +51,9 @@ struct SearchView: View {
                         Spacer()
 
                         Button("Search") {
+                            Task {
+                                await vm.getAllSubleases()
+                            }
                             showResults = true
                         }
                         .buttonStyle(.borderedProminent)
@@ -75,7 +79,7 @@ struct SearchView: View {
                                             Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
-
+                                            
                                             HStack(spacing: 2) {
                                                 ForEach(0..<5) { i in
                                                     Image(systemName: i < sublease.rating ? "star.fill" : "star")
@@ -83,29 +87,30 @@ struct SearchView: View {
                                                 }
                                             }
                                             .font(.caption)
-
+                                            
                                             if !sublease.comments.isEmpty {
                                                 Text("“\(sublease.comments)”")
                                                     .font(.footnote)
                                                     .italic()
                                                     .foregroundColor(.gray)
                                             }
-
-                                            Text(sublease.email)
+                                            
+                                            Text(sublease.contactEmail)
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
                                             Text(sublease.phoneNumber)
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
                                         }
-
+                                        
                                         Spacer()
-
-                                        Button(action: {
-                                            vm.toggleLike(for: sublease)
-                                        }) {
-                                            Image(systemName: sublease.liked ? "heart.fill" : "heart")
-                                                .foregroundColor(sublease.liked ? .red : .gray)
+                                        Button {
+                                            Task {
+                                                await vm.toggleLike(sublease: sublease, username: username)
+                                            }
+                                        } label: {
+                                            Image(systemName: sublease.heartList.contains(username) ? "heart.fill" : "heart")
+                                                .foregroundColor(sublease.heartList.contains(username) ? .red : .gray)
                                                 .imageScale(.large)
                                         }
                                     }
@@ -113,13 +118,13 @@ struct SearchView: View {
                                     .background(Color.gray.opacity(0.1))
                                     .cornerRadius(12)
                                     .padding(.horizontal)
+                                    
                                 }
                             }
                         }
                         .padding(.top)
                     }
                 }
-
                 Spacer()
             }
             .navigationTitle("Search")

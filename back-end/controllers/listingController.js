@@ -5,11 +5,17 @@ const Listing = require("../models/listingModel")
 //@route POST /api/listing
 //@access public <- not best practice but im going fast
 const createListing = asyncHandler(async (req, res) => {
-    const { UUID, username, name, address, price, distance, propertyType, contactEmail} = req.body;
-    if (!UUID || !username || !name || !address || !price || !distance || !propertyType || !contactEmail){
+    const { UUID, username, name, address, price, distance, propertyType, contactEmail, phoneNumber, rating, comments } = req.body;
+    if (!UUID || !username || !name || !address || !price || !distance || !propertyType || !contactEmail || !phoneNumber || !rating){
         res.status(400);
+        console.log("here")
         throw new error("All fields are required");
     }
+    if (!comments) {
+        comments = "No comments"
+    }
+    
+    console.log("Here")
     const listing = await Listing.create({
         UUID,
         username,
@@ -18,9 +24,12 @@ const createListing = asyncHandler(async (req, res) => {
         price,
         distance,
         propertyType,
-        contactEmail
+        contactEmail,
+        heartList : [""],
+        phoneNumber,
+        rating,
+        comments,
     });
-    //console.log("Request body is: ", req.body);
     res.status(201).json(req.body);
 });
 
@@ -29,6 +38,7 @@ const createListing = asyncHandler(async (req, res) => {
 //@access public <- not best practice but im going fast
 const getListings = asyncHandler(async (req, res) => {
     const contacts = await Listing.find( {} );
+    console.log("Attempted get")
     res.status(200).json({ contacts });
 });
 
@@ -60,3 +70,4 @@ const addHeart = asyncHandler(async (req, res) => {
     res.status(200).json(updatedContact);
 });
 
+module.exports = { createListing, getListings, addHeart }
