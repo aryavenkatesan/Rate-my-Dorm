@@ -16,6 +16,8 @@ struct Sublease: Identifiable {
     var email: String
     var phoneNumber: String
     var liked: Bool = false
+    var rating: Int = 0
+    var comments: String = ""
 }
 
 enum PropertyType: String, CaseIterable, Codable {

@@ -8,6 +8,7 @@ struct SearchView: View {
     @State private var maxPrice: Double = 5000
     @State private var maxDistance: Double = 50
     @State private var selectedType: PropertyType? = nil
+    @State private var minRating: Int = 0
 
     @State private var showResults: Bool = false
 
@@ -18,6 +19,7 @@ struct SearchView: View {
              sublease.address.localizedCaseInsensitiveContains(searchText)) &&
             sublease.price <= maxPrice &&
             sublease.distance <= maxDistance &&
+            sublease.rating >= minRating &&
             (selectedType == nil || sublease.propertyType == selectedType!)
         }
     }
@@ -40,7 +42,8 @@ struct SearchView: View {
                             FilterSheetView(
                                 maxPrice: $maxPrice,
                                 maxDistance: $maxDistance,
-                                selectedType: $selectedType
+                                selectedType: $selectedType,
+                                minRating: $minRating
                             )
                         }
 
@@ -72,10 +75,26 @@ struct SearchView: View {
                                             Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
-                                            Text("\(sublease.email)")
+
+                                            HStack(spacing: 2) {
+                                                ForEach(0..<5) { i in
+                                                    Image(systemName: i < sublease.rating ? "star.fill" : "star")
+                                                        .foregroundColor(i < sublease.rating ? .yellow : .gray)
+                                                }
+                                            }
+                                            .font(.caption)
+
+                                            if !sublease.comments.isEmpty {
+                                                Text("“\(sublease.comments)”")
+                                                    .font(.footnote)
+                                                    .italic()
+                                                    .foregroundColor(.gray)
+                                            }
+
+                                            Text(sublease.email)
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
-                                            Text("\(sublease.phoneNumber)")
+                                            Text(sublease.phoneNumber)
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
                                         }
@@ -108,12 +127,13 @@ struct SearchView: View {
     }
 }
 
-private struct FilterSheetView: View {
+struct FilterSheetView: View {
     @Environment(\.dismiss) var dismiss
 
     @Binding var maxPrice: Double
     @Binding var maxDistance: Double
     @Binding var selectedType: PropertyType?
+    @Binding var minRating: Int // Added for rating filter
 
     var body: some View {
         NavigationView {
@@ -137,6 +157,23 @@ private struct FilterSheetView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                 }
+
+                Section(header: Text("Minimum Rating")) {
+                    HStack {
+                        ForEach(1...5, id: \.self) { star in
+                            Image(systemName: minRating >= star ? "star.fill" : "star")
+                                .foregroundColor(.yellow)
+                                .onTapGesture {
+                                    if minRating == star {
+                                        minRating = 0
+                                    } else {
+                                        minRating = star
+                                    }
+                                }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
             .navigationTitle("Filters")
             .toolbar {
@@ -149,6 +186,10 @@ private struct FilterSheetView: View {
         }
     }
 }
+
+
+
+
 
 #Preview {
     let previewvm1 = OnboardingViewModel()

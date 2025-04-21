@@ -11,6 +11,7 @@ struct SubleaseView: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    // Name, Address, Rent per month, and Distance from campus
                     Group {
                         TextField("Name", text: $vm.newSubleaseName)
                         TextField("Address", text: $vm.newSubleaseAddress)
@@ -28,7 +29,28 @@ struct SubleaseView: View {
                     .padding()
                     .background(Color.blue.opacity(0.05))
                     .cornerRadius(10)
+                    
+                    // Email (Mandatory)
+                    TextField("Email", text: $vm.newSubleaseEmail)
+                        .keyboardType(.emailAddress)
+                        .padding()
+                        .background(Color.blue.opacity(0.05))
+                        .cornerRadius(10)
 
+                    // Phone Number (Mandatory)
+                    TextField("Phone Number", text: $vm.newSubleasePhoneNumber)
+                        .keyboardType(.phonePad)
+                        .padding()
+                        .background(Color.blue.opacity(0.05))
+                        .cornerRadius(10)
+
+                    // Comments (Optional)
+                    TextField("Comments (optional)", text: $vm.newSubleaseComments, axis: .vertical)
+                        .padding()
+                        .background(Color.blue.opacity(0.05))
+                        .cornerRadius(10)
+
+                    // Type Picker
                     Text("Type")
                         .font(.headline)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -40,6 +62,26 @@ struct SubleaseView: View {
                     }
                     .pickerStyle(.segmented)
 
+                    // Rating Picker (Optional)
+                    Text("Rating")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    HStack {
+                        ForEach(1...5, id: \.self) { star in
+                            Image(systemName: vm.newSubleaseRating >= star ? "star.fill" : "star")
+                                .foregroundColor(.yellow)
+                                .onTapGesture {
+                                    if vm.newSubleaseRating == star {
+                                        vm.newSubleaseRating = 0
+                                    } else {
+                                        vm.newSubleaseRating = star
+                                    }
+                                }
+                        }
+                    }
+
+                    // Add Sublease Button
                     Button("Add Sublease", action: vm.add)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -49,11 +91,13 @@ struct SubleaseView: View {
                         .disabled(
                             vm.newSubleaseName.isEmpty ||
                             vm.newSubleaseAddress.isEmpty ||
+                            vm.newSubleaseEmail.isEmpty ||
+                            vm.newSubleasePhoneNumber.isEmpty ||
                             vm.newSubleasePrice == nil ||
                             vm.newSubleaseDistance == nil
                         )
 
-
+                    // Status Message
                     if !statusMessage.isEmpty {
                         Text(statusMessage)
                             .foregroundColor(statusMessageColor)

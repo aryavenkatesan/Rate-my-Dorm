@@ -17,6 +17,8 @@ class RentViewModel: ObservableObject {
     @Published var newSubleasePropertyType = PropertyType.apartment
     @Published var newSubleaseEmail: String = ""
     @Published var newSubleasePhoneNumber: String = ""
+    @Published var newSubleaseRating: Int = 0
+    @Published var newSubleaseComments: String = ""
 
     func add() {
         guard let price = newSubleasePrice, let distance = newSubleaseDistance else {
@@ -31,7 +33,9 @@ class RentViewModel: ObservableObject {
             distance: distance,
             propertyType: newSubleasePropertyType,
             email: newSubleaseEmail,
-            phoneNumber: newSubleasePhoneNumber
+            phoneNumber: newSubleasePhoneNumber,
+            rating: newSubleaseRating,
+            comments: newSubleaseComments
         )
         subleases.append(newSublease)
 
@@ -46,6 +50,8 @@ class RentViewModel: ObservableObject {
         newSubleasePropertyType = PropertyType.apartment
         newSubleaseEmail = ""
         newSubleasePhoneNumber = ""
+        newSubleaseRating = 0
+        newSubleaseComments = ""
     }
 
     func toggleLike(for sublease: Sublease) {
