@@ -22,6 +22,7 @@ app.use (
 )
 app.use("/api/contacts", require("./routes/contactRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/listing", require("./routes/listingRoutes"));
 app.use(errorHandler);
 
 app.listen(port, () => {

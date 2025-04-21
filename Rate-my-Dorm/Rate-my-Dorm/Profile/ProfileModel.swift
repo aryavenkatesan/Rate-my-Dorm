@@ -83,16 +83,20 @@ struct ProfileModel {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let (data, response) = try await URLSession.shared.data(for: request)
-        let jsonResponse = try decoder.decode([ListingJSON].self, from: data)
+        let jsonResponse = try decoder.decode(ContactsResponse.self, from: data) //this should be changed
         
         var output: [Sublease] = []
         
-        for listing in jsonResponse {
+        if (jsonResponse.message == nil){
+            return output
+        }
+        
+        for listing in jsonResponse.contacts! {
             var PType: PropertyType
             switch (listing.propertyType){
-            case("apartment"):
+            case(".apartment"):
                 PType = PropertyType.apartment
-            case("dorm"):
+            case(".dorm"):
                 PType = PropertyType.dorm
             default:
                 PType = PropertyType.house
@@ -135,7 +139,8 @@ struct ProfileModel {
         request.httpBody = encoded
         
         let (data, response) = try await URLSession.shared.data(for: request)
-        let jsonResponse = try decoder.decode(ListingResponseJSON.self, from: data)
+        //dont need to decode response, its not used at all
+        let jsonResponse = try decoder.decode(HeartResponse.self, from: data)
         
         let httpResponse = response as! HTTPURLResponse
         
@@ -168,3 +173,42 @@ struct ListingJSON: Codable {
     let contactEmail: String
     let heartList: [String]
 }
+
+struct ContactsResponse: Codable {
+    let contacts: [ListingJSONResponse]?
+    let title: String?
+    let message: String?
+    let stackTrace: String?
+}
+
+struct HeartResponse: Codable {
+    let contacts: ListingJSONResponse
+    let title: String?
+    let message: String?
+    let stackTrace: String?
+}
+
+struct ListingJSONResponse: Codable {
+    let _id: String
+    let UUID: String
+    let username: String
+    let name: String
+    let address: String
+    let price: Double
+    let distance: Double
+    let propertyType: String
+    let contactEmail: String
+    let heartList: [String]
+    let __v: Int
+}
+
+//{
+//"UUID": "2E1337D7-82D4-4198-B614-43BE9264FE61",
+//"username": "user321",
+//"name": "Cozy Apt",
+//"address": "123 College St",
+//"price": 850,
+//"distance": 0.5,
+//"propertyType": ".apartment",
+//"contactEmail": "example@gmail.com"
+//}

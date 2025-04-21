@@ -33,30 +33,33 @@ const getListings = asyncHandler(async (req, res) => {
 });
 
 //@desc alternate heart placements  
-//@route PUT /api/listing/:id
+//@route PUT /api/listing/
 //@access public <- not best practice but im going fast
 const addHeart = asyncHandler(async (req, res) => {
-    const { username } = req.body;
-    if (!username){
+    const { username, UUID } = req.body;
+    if (!username || !UUID){
         res.status(400);
         throw new error("Username and list required.");
     }
-    const listing = await Listing.findById(req.params.id);
+    const listing = await Listing.findOne( { UUID: UUID } );
     if(!listing) { 
         res.status(404)
         throw new Error("Listing not found")
     }
+
     if (!listing.heartList.includes(username)) {
         //add if its not there
         listing.heartList.push(username);
     } else {
         //remove if it is there
-        listing.heartList.splice(heartIndex, 1);
+        console.log("c4")
+        listing.heartList.splice(listing.heartIndex, 1);
     }
 
     //save changes to db
     const updatedListing = await listing.save();
 
-    res.status(200).json(updatedContact);
+    res.status(200).json({updatedListing});
 });
 
+module.exports = { createListing, getListings, addHeart }

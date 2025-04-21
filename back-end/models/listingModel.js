@@ -28,7 +28,7 @@ const listingSchema = mongoose.Schema({
     },
     propertyType: {
         type: String,
-        enum: ["apartment", "dorm", "house"], // Enforce allowed values
+        enum: [".apartment", ".dorm", ".house"], // Enforce allowed values
         required: true,
     },
     contactEmail: {

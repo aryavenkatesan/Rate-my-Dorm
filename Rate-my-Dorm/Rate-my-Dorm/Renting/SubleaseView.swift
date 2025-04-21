@@ -58,6 +58,8 @@ struct SubleaseView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
+                        for s in vm.subleases {
+                            print(s.id)                        }
                     }
                 }
             }
