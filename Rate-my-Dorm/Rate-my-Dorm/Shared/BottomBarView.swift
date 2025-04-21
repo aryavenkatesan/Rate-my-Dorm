@@ -12,9 +12,9 @@ struct BottomBarView: View {
     @State var currentTab: Tab = .Rent
     @Namespace var animation
     @ObservedObject var Onboardingvm: OnboardingViewModel
-    @ObservedObject var Rentvm: RentViewModel
+    @ObservedObject var Rentvm: SubleaseViewModel
     
-    init (onboardingVM: OnboardingViewModel, rentVM: RentViewModel) {
+    init (onboardingVM: OnboardingViewModel, rentVM: SubleaseViewModel) {
         UITabBar.appearance().isHidden = true
         self.Onboardingvm = onboardingVM
         self.Rentvm = rentVM
@@ -124,7 +124,7 @@ var body: some View {
 struct BottomBarView_Previews: PreviewProvider {
     static var previews: some View {
         let previewvm1 = OnboardingViewModel()
-        let previewvm2 = RentViewModel()
+        let previewvm2 = SubleaseViewModel()
 
         BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
     }

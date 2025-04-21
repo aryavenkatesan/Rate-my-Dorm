@@ -112,7 +112,7 @@ struct ProfileView: View {
 
 #Preview {
     let previewvm = OnboardingViewModel()
-    let previewvm2 = RentViewModel()
+    let previewvm2 = SubleaseViewModel()
 
     BottomBarView(onboardingVM: previewvm, rentVM: previewvm2)
 }

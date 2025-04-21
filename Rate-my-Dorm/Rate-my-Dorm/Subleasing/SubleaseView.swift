@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SubleaseView: View {
-    @ObservedObject var vm: RentViewModel
+    @ObservedObject var vm: SubleaseViewModel
     @Environment(\.dismiss) private var dismiss
 
     @State private var statusMessage: String = ""
@@ -63,11 +63,11 @@ struct SubleaseView: View {
                     .pickerStyle(.segmented)
 
                     // Rating Picker (Optional)
-                    Text("Rating")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    //Text("Rating")
+                        //.font(.headline)
+                        //.frame(maxWidth: .infinity, alignment: .leading)
 
-                    HStack {
+                    /*HStack {
                         ForEach(1...5, id: \.self) { star in
                             Image(systemName: vm.newSubleaseRating >= star ? "star.fill" : "star")
                                 .foregroundColor(.yellow)
@@ -79,7 +79,7 @@ struct SubleaseView: View {
                                     }
                                 }
                         }
-                    }
+                    }*/
 
                     // Add Sublease Button
                     Button("Add Sublease", action: vm.add)
@@ -120,7 +120,7 @@ struct SubleaseView: View {
 
 #Preview {
     let previewvm1 = OnboardingViewModel()
-    let previewvm2 = RentViewModel()
+    let previewvm2 = SubleaseViewModel()
 
     BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
 }

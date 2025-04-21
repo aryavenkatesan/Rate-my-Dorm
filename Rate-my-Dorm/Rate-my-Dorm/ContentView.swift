@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     //instantiate all of the ViewModels 
     @StateObject private var OnboardingVM = OnboardingViewModel()
-    @StateObject private var RentVM = RentViewModel()
+    @StateObject private var RentVM = SubleaseViewModel()
     
     var body: some View {
         

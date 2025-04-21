@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    @ObservedObject var vm: RentViewModel
+    @ObservedObject var vm: SubleaseViewModel
     @State private var showFilterSheet = false
 
     @State private var searchText: String = ""
@@ -97,6 +97,35 @@ struct SearchView: View {
                                             Text(sublease.phoneNumber)
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
+                                            // Rating Section
+                                            if !sublease.reviews.isEmpty {
+                                                let avg = sublease.reviews.map { Double($0.rating) }.reduce(0, +) / Double(sublease.reviews.count)
+                                                
+                                                HStack(spacing: 2) {
+                                                    ForEach(0..<5) { i in
+                                                        Image(systemName: i < Int(avg.rounded()) ? "star.fill" : "star")
+                                                            .foregroundColor(i < Int(avg.rounded()) ? .yellow : .gray)
+                                                    }
+                                                    Text("(\(sublease.reviews.count))")
+                                                        .font(.caption)
+                                                        .foregroundColor(.gray)
+                                                }
+                                                .font(.caption)
+                                            }
+
+                                            HStack {
+                                                NavigationLink("Add Rating") {
+                                                    AddReviewView(sublease: sublease, vm: vm)
+                                                }
+                                                .foregroundColor(.blue)
+
+                                                NavigationLink("Read Reviews") {
+                                                    ReviewListView(reviews: sublease.reviews)
+                                                }
+                                                .foregroundColor(.blue)
+                                            }
+                                            .font(.caption)
+
                                         }
 
                                         Spacer()
@@ -193,7 +222,7 @@ struct FilterSheetView: View {
 
 #Preview {
     let previewvm1 = OnboardingViewModel()
-    let previewvm2 = RentViewModel()
+    let previewvm2 = SubleaseViewModel()
 
     BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
 }
