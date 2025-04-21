@@ -1,11 +1,24 @@
 Marynna?
 
 API endpoints
-    Signup
-    Login
+    Signup √
+    Login √
 
-    New Sublease
-    Get all Subleases (We will do the sorting within swiftui)
+    - New Sublease
+    - Get all Subleases (We will do the sorting within swiftui)
+      -> for my listings, we'll have the creator username as a field 
+                this will allow us to get all and sort by username 
+
+    
+
+    - add username to heartList
+    - remove username from heartList
+    - get heartList (maybe just have it as get specific sublease?)
+        -> should be implemented in Swiftui as flipheart or smth
+      -> for heart impl, we could do list of usernames in listing
+            loop through all listings and see if username exists
+            on appear (profile view), refresh the list of hearted guys
+
 
 Changing the user schema to 
 {
