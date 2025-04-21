@@ -26,7 +26,8 @@ class RentViewModel: ObservableObject {
             print("Price or distance is nil. Cannot add sublease.")
             return
         }
-
+        
+        print("checkpoint1")
         let newSublease = Sublease(
             creatorUsername: username,
             name: newSubleaseName,
@@ -39,11 +40,15 @@ class RentViewModel: ObservableObject {
             phoneNumber: newSubleasePhoneNumber,
             rating: newSubleaseRating,
             comments: newSubleaseComments)
+        print("checkpoint2")
+        
         
         do {
+            print("checkpoint3")
             let response = try await ProfileModel.uploadListingAPIRequest(listingInput: newSublease, usernameActual: username)
+                print("SKDJFLDHJS")
         } catch {
-            print("Something went wrong")
+            print("Something went wrong 1")
         }
         
         resetSublease()
@@ -73,10 +78,11 @@ class RentViewModel: ObservableObject {
         }
         
         do {
-            let response = try await ProfileModel.flipHeartStatusAPIRequest(listingInput: sublease, user: username)
+            _ = try await ProfileModel.flipHeartStatusAPIRequest(listingInput: sublease, user: username)
+//            await getAllSubleases()
             //let errmsg = response  This is not used
         } catch {
-            print("Something went wrong")
+            print("Something went wrong 2")
         }
     }
     
@@ -85,7 +91,42 @@ class RentViewModel: ObservableObject {
             let response = try await ProfileModel.getAllListingsAPIRequest()
             subleases = response
         } catch {
-            print("Something went wrong")
+            print("Something went wrong 3")
+        }
+    }
+    
+    func getMyListings(username: String) async {
+        Task {
+            await getAllSubleases()
+        }
+        var output: [Sublease] = []
+        for s in subleases{
+            if (s.creatorUsername == username) {
+                output.append(s)
+            }
+        }
+        subleases = output
+    }
+    
+    func getMyHeartListings(username: String) async {
+        Task {
+            await getAllSubleases()
+        }
+        var output: [Sublease] = []
+        for s in subleases{
+            if (s.heartList.contains(username)) {
+                output.append(s)
+            }
+        }
+        subleases = output
+    }
+    
+    func deleteListing(sublease: Sublease) async {
+        do {
+            let errmsg = try await ProfileModel.deleteAPIRequest(listingInput: sublease)
+            
+        } catch {
+            print("Something went wrong 4")
         }
     }
 }

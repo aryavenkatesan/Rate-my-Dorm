@@ -36,7 +36,7 @@ struct BottomBarView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.blue.opacity(0.2))
                 case .Profile:
-                    ProfileView(onboardingVM: Onboardingvm)
+                    ProfileView(onboardingVM: Onboardingvm, vm: Rentvm)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.green.opacity(0.2))
                 }

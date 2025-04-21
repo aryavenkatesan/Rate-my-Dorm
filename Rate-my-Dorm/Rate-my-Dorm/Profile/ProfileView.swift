@@ -9,6 +9,10 @@ import SwiftUI
 
 struct ProfileView: View {
     var onboardingVM: OnboardingViewModel
+    var vm: RentViewModel
+    @State private var selectedTab = "My Listings" //0 for My listings, 1 for hearted
+    var selections = ["My Listings", "Hearted Listings"]
+    var filteredSubleases: [Sublease] = []
     
     var body: some View {
         NavigationView {
@@ -113,10 +117,42 @@ struct ProfileView: View {
                 
                 VStack {
                     //ZStack frame for the menu things
-                    Text("Here")
-                        .padding(.top, 140)
+                    Picker("", selection: $selectedTab) {
+                        ForEach(selections, id: \.self) { selection in
+                            Text(selection).tag(selection)
+//                            Task {
+//                                if (selectedTab == "My Listings"){
+//                                    await vm.getMyListings(username: onboardingVM.usernameActual)
+//                                } else {
+//                                    await vm.getMyHeartListings(username: onboardingVM.usernameActual)
+//                                }
+//                            }
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .frame(maxWidth: 240)
+                    .padding(.horizontal, 20)
+                    //.padding(.top, 130)
+                    
+                    if selectedTab == "My Listings" {
+                        SubleaseListView(
+                            filteredSubleases: vm.subleases,
+                            showTrashButton: true, // or true depending on context
+                            vm: vm,
+                            username: onboardingVM.usernameActual
+                        )
+                        
+                        
+                    } else { //heartlist
+                        SubleaseListView(
+                            filteredSubleases: vm.subleases,
+                            showTrashButton: false, // or true depending on context
+                            vm: vm,
+                            username: onboardingVM.usernameActual
+                        )
+                    }
                 }
-                
+                .offset(x: 0, y: 800)
             }
         }
     }

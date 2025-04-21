@@ -85,7 +85,9 @@ struct SubleaseView: View {
                     // Add Sublease Button
                     Button {
                         Task {
+                            print("Tryign to add")
                             await vm.add(username: username)
+                            print("Added?")
                         }
                     } label: {
                         Text("Add Sublease")

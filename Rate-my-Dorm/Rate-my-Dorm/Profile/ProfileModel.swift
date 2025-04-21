@@ -24,11 +24,7 @@ struct ProfileModel {
         request.httpMethod = "POST"
 
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        /*
-         ****** IMPORTANT IMPORTANT ******
-         CREATE A NEW FIELD FOR CONTACT EMAIL SO I CAN PASS IT TO THE API REQUEST
-         */
+        print("c1")
 
         let json = ListingJSON(
             UUID: "\(listingInput.id)",
@@ -38,32 +34,39 @@ struct ProfileModel {
             price: listingInput.price,
             distance: listingInput.distance,
             propertyType: "\(listingInput.propertyType)",
-            contactEmail: "FIX THIS FIX THIS FIX THIS", //listingInput.email
-            heartList: [""],
+            contactEmail: listingInput.contactEmail,
             phoneNumber: listingInput.phoneNumber,
             rating: listingInput.rating,
             comments: listingInput.comments
         )
-//        let jsonold: [String: Any] = [
-//            "UUID": "\(listingInput.id)",
-//            "username": usernameActual,
-//            "name": listingInput.name,
-//            "address": listingInput.address,
-//            "price": listingInput.price,
-//            "distance": listingInput.distance,
-//            "propertyType": "\(listingInput.propertyType)",
-//            "contactEmail": "FIX THIS FIX THIS FIX THIS",//listingInput.email
-//        ]
+        print("SLDKF")
+//       //{
+        //"UUID": "2E1337D7-82D4-4198-B614-43BE9264FE61",
+        //"username": "user321",
+        //"name": "Cozy Apt",
+        //"address": "123 College St",
+        //"price": 850,
+        //"distance": 0.5,
+        //"propertyType": ".apartment",
+        //"contactEmail": "example@gmail.com",
+        //"phoneNumber": "1234567890",
+        //"rating": 4,
+        //"comments": "I like this place"
+        //}
+
         let encoded: Data = try encoder.encode(json)
         request.httpBody = encoded
-        
+        print("c2")
         let (data, response) = try await URLSession.shared.data(for: request)
-        let jsonResponse = try decoder.decode(ListingResponseJSON.self, from: data)
+        print("cc")
+        let jsonResponse = try decoder.decode(HeartResponse.self, from: data)
+        print("c3")
         
         let httpResponse = response as! HTTPURLResponse
         if httpResponse.statusCode <= 299 {
             return ""
         }
+        print("ERROR")
         
         if (jsonResponse.message != nil) {
             //extra checks so the app doesn't crash
@@ -115,7 +118,9 @@ struct ProfileModel {
                                                 heartList: listing.heartList,
                                                 phoneNumber: listing.phoneNumber,
                                                 rating: listing.rating,
-                                                comments: listing.comments)
+                                                comments: listing.comments,
+                                                idCopy: listing.UUID)
+            //print(listing.UUID)
             output.append(oneListing)
         }
         
@@ -135,18 +140,55 @@ struct ProfileModel {
     
     static func flipHeartStatusAPIRequest(listingInput: Sublease, user: String) async throws -> String {
         // TODO: Implement
-        let workingUrl = baseUrl + "api/listing/:id=\(listingInput.id)"
+        let workingUrl = baseUrl + "api/listing/"
         guard let url = URL(string: workingUrl) else {
             fatalError("Invalid URL")
         }
 
         var request: URLRequest = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = "PUT"
 
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
         let json: [String: String] = [
+            "UUID": "\(listingInput.idCopy!)",
             "username": user
+        ]
+        print("\(json)")
+        let encoded: Data = try encoder.encode(json)
+        request.httpBody = encoded
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        //dont need to decode response, its not used at all
+        let jsonResponse = try decoder.decode(HeartResponse.self, from: data)
+        
+        
+        let httpResponse = response as! HTTPURLResponse
+        
+        if httpResponse.statusCode <= 299 {
+            //200-299 is a success
+            print("sucess")
+            return ""
+        } else {
+            print("\(jsonResponse)")
+            return jsonResponse.message!
+        }
+    }
+    
+    static func deleteAPIRequest(listingInput: Sublease) async throws -> String {
+        // TODO: Implement
+        let workingUrl = baseUrl + "api/listing/"
+        guard let url = URL(string: workingUrl) else {
+            fatalError("Invalid URL")
+        }
+
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let json: [String: String] = [
+            "UUID": "\(listingInput.idCopy!)"
         ]
         let encoded: Data = try encoder.encode(json)
         request.httpBody = encoded
@@ -155,12 +197,15 @@ struct ProfileModel {
         //dont need to decode response, its not used at all
         let jsonResponse = try decoder.decode(HeartResponse.self, from: data)
         
+        
         let httpResponse = response as! HTTPURLResponse
         
         if httpResponse.statusCode <= 299 {
             //200-299 is a success
+            print("sucess")
             return ""
         } else {
+            print("\(jsonResponse)")
             return jsonResponse.message!
         }
     }
@@ -184,7 +229,6 @@ struct ListingJSON: Codable {
     let distance: Double
     let propertyType: String
     let contactEmail: String
-    let heartList: [String]
     let phoneNumber: String
     let rating: Int
     let comments: String
@@ -198,7 +242,20 @@ struct ContactsResponse: Codable {
 }
 
 struct HeartResponse: Codable {
-    let contacts: ListingJSONResponse
+    let _id: String?
+    let UUID: String?
+    let username: String?
+    let name: String?
+    let address: String?
+    let price: Double?
+    let distance: Double?
+    let propertyType: String?
+    let contactEmail: String?
+    let heartList: [String]?
+    let phoneNumber: String?
+    let rating: Int?
+    let comments: String?
+    let __v: Int?
     let title: String?
     let message: String?
     let stackTrace: String?
