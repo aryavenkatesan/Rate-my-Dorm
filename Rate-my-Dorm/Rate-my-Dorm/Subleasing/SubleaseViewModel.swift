@@ -17,8 +17,10 @@ class SubleaseViewModel: ObservableObject {
     @Published var newSubleasePropertyType = PropertyType.apartment
     @Published var newSubleaseEmail: String = ""
     @Published var newSubleasePhoneNumber: String = ""
-    @Published var newSubleaseRating: Int = 0
-    @Published var newSubleaseComments: String = ""
+    @Published var newSubleaseReviews: [Review] = []
+    
+    // New comments property
+    @Published var newSubleaseComments: String? = nil
 
     func add() {
         guard let price = newSubleasePrice, let distance = newSubleaseDistance else {
@@ -34,8 +36,7 @@ class SubleaseViewModel: ObservableObject {
             propertyType: newSubleasePropertyType,
             email: newSubleaseEmail,
             phoneNumber: newSubleasePhoneNumber,
-            rating: newSubleaseRating,
-            comments: newSubleaseComments
+            reviews: newSubleaseReviews
         )
         subleases.append(newSublease)
 
@@ -50,13 +51,20 @@ class SubleaseViewModel: ObservableObject {
         newSubleasePropertyType = PropertyType.apartment
         newSubleaseEmail = ""
         newSubleasePhoneNumber = ""
-        newSubleaseRating = 0
-        newSubleaseComments = ""
+        newSubleaseReviews = []
+        newSubleaseComments = nil
     }
 
     func toggleLike(for sublease: Sublease) {
         if let index = subleases.firstIndex(where: { $0.id == sublease.id }) {
             subleases[index].liked.toggle()
         }
+    }
+    
+    func addReview(for sublease: Sublease, rating: Int, comment: String?) {
+        guard let index = subleases.firstIndex(where: { $0.id == sublease.id }) else { return }
+
+        let newReview = Review(rating: rating, comment: comment)
+        subleases[index].reviews.append(newReview)
     }
 }

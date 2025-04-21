@@ -6,6 +6,12 @@
 //
 import Foundation
 
+struct Review: Identifiable {
+    let id = UUID()
+    var rating: Int
+    var comment: String?
+}
+
 struct Sublease: Identifiable {
     let id = UUID()
     var name: String
@@ -16,9 +22,19 @@ struct Sublease: Identifiable {
     var email: String
     var phoneNumber: String
     var liked: Bool = false
-    var rating: Int = 0
-    var comments: String = ""
+    var reviews: [Review] = []
+
+    var averageRating: Int {
+        guard !reviews.isEmpty else { return 0 }
+        let total = reviews.map { $0.rating }.reduce(0, +)
+        return total / reviews.count
+    }
+
+    var topComment: String {
+        reviews.first(where: { (($0.comment?.isEmpty) == nil) })?.comment ?? ""
+    }
 }
+
 
 enum PropertyType: String, CaseIterable, Codable {
     case apartment

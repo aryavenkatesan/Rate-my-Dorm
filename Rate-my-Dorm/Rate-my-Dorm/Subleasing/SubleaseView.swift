@@ -13,96 +13,33 @@ struct SubleaseView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     // Name, Address, Rent per month, and Distance from campus
                     Group {
-                        TextField("Name", text: $vm.newSubleaseName)
-                        TextField("Address", text: $vm.newSubleaseAddress)
-                        TextField("",
-                                  value: $vm.newSubleasePrice,
-                                  format: .number,
-                                  prompt: Text("Rent per month"))
-                            .keyboardType(.decimalPad)
-                        TextField("",
-                                  value: $vm.newSubleaseDistance,
-                                  format: .number,
-                                  prompt: Text("Miles from campus"))
-                            .keyboardType(.decimalPad)
+                        SubleaseTextField(label: "Name", text: $vm.newSubleaseName)
+                        SubleaseTextField(label: "Address", text: $vm.newSubleaseAddress)
+                        SubleaseNumberTextField(label: "Rent per month", value: $vm.newSubleasePrice)
+                        SubleaseNumberTextField(label: "Miles from campus", value: $vm.newSubleaseDistance)
                     }
-                    .padding()
-                    .background(Color.blue.opacity(0.05))
-                    .cornerRadius(10)
-                    
+
                     // Email (Mandatory)
-                    TextField("Email", text: $vm.newSubleaseEmail)
-                        .keyboardType(.emailAddress)
-                        .padding()
-                        .background(Color.blue.opacity(0.05))
-                        .cornerRadius(10)
+                    SubleaseTextField(label: "Email", text: $vm.newSubleaseEmail, keyboardType: .emailAddress)
 
                     // Phone Number (Mandatory)
-                    TextField("Phone Number", text: $vm.newSubleasePhoneNumber)
-                        .keyboardType(.phonePad)
-                        .padding()
-                        .background(Color.blue.opacity(0.05))
-                        .cornerRadius(10)
+                    SubleaseTextField(label: "Phone Number", text: $vm.newSubleasePhoneNumber, keyboardType: .phonePad)
 
                     // Comments (Optional)
-                    TextField("Comments (optional)", text: $vm.newSubleaseComments, axis: .vertical)
-                        .padding()
-                        .background(Color.blue.opacity(0.05))
-                        .cornerRadius(10)
+                    SubleaseTextField(label: "Comments (optional)", text: Binding(
+                        get: { vm.newSubleaseComments ?? "" },
+                        set: { vm.newSubleaseComments = $0.isEmpty ? nil : $0 }
+                    ), axis: .vertical)
+
 
                     // Type Picker
-                    Text("Type")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Picker("Type", selection: $vm.newSubleasePropertyType) {
-                        ForEach(PropertyType.allCases, id: \.self) { type in
-                            Text(type.rawValue.capitalized).tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-
-                    // Rating Picker (Optional)
-                    /*Text("Rating")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack {
-                        ForEach(1...5, id: \.self) { star in
-                            Image(systemName: vm.newSubleaseRating >= star ? "star.fill" : "star")
-                                .foregroundColor(.yellow)
-                                .onTapGesture {
-                                    if vm.newSubleaseRating == star {
-                                        vm.newSubleaseRating = 0
-                                    } else {
-                                        vm.newSubleaseRating = star
-                                    }
-                                }
-                        }
-                    }*/
+                    PropertyTypePicker(selectedType: $vm.newSubleasePropertyType)
 
                     // Add Sublease Button
-                    Button("Add Sublease", action: vm.add)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.accentColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .disabled(
-                            vm.newSubleaseName.isEmpty ||
-                            vm.newSubleaseAddress.isEmpty ||
-                            vm.newSubleaseEmail.isEmpty ||
-                            vm.newSubleasePhoneNumber.isEmpty ||
-                            vm.newSubleasePrice == nil ||
-                            vm.newSubleaseDistance == nil
-                        )
+                    AddSubleaseButton(vm: vm, statusMessage: $statusMessage, statusMessageColor: $statusMessageColor)
 
                     // Status Message
-                    if !statusMessage.isEmpty {
-                        Text(statusMessage)
-                            .foregroundColor(statusMessageColor)
-                            .padding()
-                    }
+                    StatusMessageView(statusMessage: $statusMessage, statusMessageColor: $statusMessageColor)
                 }
                 .padding()
             }
@@ -117,6 +54,93 @@ struct SubleaseView: View {
         }
     }
 }
+
+struct SubleaseTextField: View {
+    var label: String
+    @Binding var text: String
+    var keyboardType: UIKeyboardType = .default
+    var axis: Axis = .horizontal
+
+    var body: some View {
+        TextField(label, text: $text, axis: axis)
+            .keyboardType(keyboardType)
+            .padding()
+            .background(Color.blue.opacity(0.05))
+            .cornerRadius(10)
+    }
+}
+
+struct SubleaseNumberTextField: View {
+    var label: String
+    @Binding var value: Double?
+    var keyboardType: UIKeyboardType = .decimalPad
+
+    var body: some View {
+        TextField("", value: $value, format: .number, prompt: Text(label))
+            .keyboardType(keyboardType)
+            .padding()
+            .background(Color.blue.opacity(0.05))
+            .cornerRadius(10)
+    }
+}
+
+struct PropertyTypePicker: View {
+    @Binding var selectedType: PropertyType
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("Type")
+                .font(.headline)
+            Picker("Type", selection: $selectedType) {
+                ForEach(PropertyType.allCases, id: \.self) { type in
+                    Text(type.rawValue.capitalized).tag(type)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+        }
+    }
+}
+
+
+struct AddSubleaseButton: View {
+    @ObservedObject var vm: SubleaseViewModel
+    @Binding var statusMessage: String
+    @Binding var statusMessageColor: Color
+
+    var body: some View {
+        Button("Add Sublease", action: {
+            vm.add()
+            // Set status message or handle error here
+        })
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color.accentColor)
+        .foregroundColor(.white)
+        .cornerRadius(10)
+        .disabled(
+            vm.newSubleaseName.isEmpty ||
+            vm.newSubleaseAddress.isEmpty ||
+            vm.newSubleaseEmail.isEmpty ||
+            vm.newSubleasePhoneNumber.isEmpty ||
+            vm.newSubleasePrice == nil ||
+            vm.newSubleaseDistance == nil
+        )
+    }
+}
+
+struct StatusMessageView: View {
+    @Binding var statusMessage: String
+    @Binding var statusMessageColor: Color
+
+    var body: some View {
+        if !statusMessage.isEmpty {
+            Text(statusMessage)
+                .foregroundColor(statusMessageColor)
+                .padding()
+        }
+    }
+}
+
 
 #Preview {
     let previewvm1 = OnboardingViewModel()
