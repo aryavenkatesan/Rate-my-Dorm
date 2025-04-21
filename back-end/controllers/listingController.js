@@ -6,16 +6,20 @@ const Listing = require("../models/listingModel")
 //@access public <- not best practice but im going fast
 const createListing = asyncHandler(async (req, res) => {
     const { UUID, username, name, address, price, distance, propertyType, contactEmail, phoneNumber, rating, comments } = req.body;
-    if (!UUID || !username || !name || !address || !price || !distance || !propertyType || !contactEmail || !phoneNumber || !rating){
+    console.log("StartedAPI")
+    if (!UUID || !username || !name || !address || !price || !distance || !propertyType || !contactEmail || !phoneNumber ){
         res.status(400);
-        console.log("here")
+        console.log("fields error")
         throw new Error("All fields are required");
     }
     if (!comments) {
         comments = "No comments"
     }
+    if (!rating) {
+        rating = 0
+    }
     
-    console.log("Here")
+    console.log("after input val")
     const listing = await Listing.create({
         UUID,
         username,
@@ -28,8 +32,9 @@ const createListing = asyncHandler(async (req, res) => {
         heartList : [""],
         phoneNumber,
         rating,
-        comments,
+        comments
     });
+    print("Made listing and returning")
     res.status(201).json(req.body);
 });
 

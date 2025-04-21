@@ -11,7 +11,6 @@ struct SubleaseListView: View {
     let showTrashButton: Bool
     let vm: RentViewModel
     let username: String
-    @State private var refreshID = UUID()
     
     init(filteredSubleases: [Sublease], showTrashButton: Bool, vm: RentViewModel, username: String) {
         self._filteredSubleases = State(initialValue: filteredSubleases)
@@ -24,7 +23,6 @@ struct SubleaseListView: View {
         }
         
         if showTrashButton {
-            //myListings
             var output: [Sublease] = []
             for s in vm.subleases {
                 if s.creatorUsername == username {
@@ -33,7 +31,6 @@ struct SubleaseListView: View {
             }
             self._filteredSubleases = State(initialValue: output)
         } else {
-            //heart listing
             var output: [Sublease] = []
             for s in vm.subleases {
                 if s.heartList.contains(username) {
@@ -45,7 +42,7 @@ struct SubleaseListView: View {
     }
     
     var body: some View {
-        ScrollView {
+        ScrollView(.vertical, showsIndicators: true) {
             LazyVStack(spacing: 12) {
                 if filteredSubleases.isEmpty {
                     Text("No results found.")
@@ -59,14 +56,14 @@ struct SubleaseListView: View {
                             vm: vm,
                             username: username,
                             onDelete: {
-                                // Refresh logic
                                 Task {
                                     await vm.getAllSubleases()
-                                    
-                                    if showTrashButton {
-                                        filteredSubleases = vm.subleases.filter { $0.creatorUsername == username }
-                                    } else {
-                                        filteredSubleases = vm.subleases.filter { $0.heartList.contains(username) }
+                                    withAnimation {
+                                        if showTrashButton {
+                                            filteredSubleases = vm.subleases.filter { $0.creatorUsername == username }
+                                        } else {
+                                            filteredSubleases = vm.subleases.filter { $0.heartList.contains(username) }
+                                        }
                                     }
                                 }
                             }
@@ -76,7 +73,7 @@ struct SubleaseListView: View {
             }
             .padding(.top)
         }
-        .id(refreshID)
+        // Remove the .id modifier
     }
 }
 

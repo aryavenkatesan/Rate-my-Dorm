@@ -27,7 +27,6 @@ class RentViewModel: ObservableObject {
             return
         }
         
-        print("checkpoint1")
         let newSublease = Sublease(
             creatorUsername: username,
             name: newSubleaseName,
@@ -40,18 +39,16 @@ class RentViewModel: ObservableObject {
             phoneNumber: newSubleasePhoneNumber,
             rating: newSubleaseRating,
             comments: newSubleaseComments)
-        print("checkpoint2")
         
         
         do {
-            print("checkpoint3")
+            resetSublease()
             let response = try await ProfileModel.uploadListingAPIRequest(listingInput: newSublease, usernameActual: username)
-                print("SKDJFLDHJS")
         } catch {
             print("Something went wrong 1")
         }
         
-        resetSublease()
+        
     }
 
     func resetSublease() {

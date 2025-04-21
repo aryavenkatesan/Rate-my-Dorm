@@ -36,31 +36,32 @@ struct ProfileModel {
             propertyType: "\(listingInput.propertyType)",
             contactEmail: listingInput.contactEmail,
             phoneNumber: listingInput.phoneNumber,
-            rating: listingInput.rating,
+            rating: Double(listingInput.rating),
             comments: listingInput.comments
         )
-        print("SLDKF")
-//       //{
-        //"UUID": "2E1337D7-82D4-4198-B614-43BE9264FE61",
-        //"username": "user321",
-        //"name": "Cozy Apt",
-        //"address": "123 College St",
-        //"price": 850,
-        //"distance": 0.5,
-        //"propertyType": ".apartment",
-        //"contactEmail": "example@gmail.com",
-        //"phoneNumber": "1234567890",
-        //"rating": 4,
-        //"comments": "I like this place"
-        //}
+        
+        print(json)
+//      {
+//        "UUID": "2E1337D7-82D4-4198-B614-43BE9264FE61",
+//        "username": "user321",
+//        "name": "Cozy Apt",
+//        "address": "123 College St",
+//        "price": 850,
+//        "distance": 0.5,
+//        "propertyType": ".apartment",
+//        "contactEmail": "example@gmail.com",
+//        "phoneNumber": "1234567890",
+//        "rating": 4,
+//        "comments": "I like this place"
+//      }
 
         let encoded: Data = try encoder.encode(json)
         request.httpBody = encoded
-        print("c2")
+        print(encoded)
         let (data, response) = try await URLSession.shared.data(for: request)
         print("cc")
         let jsonResponse = try decoder.decode(HeartResponse.self, from: data)
-        print("c3")
+        print(jsonResponse)
         
         let httpResponse = response as! HTTPURLResponse
         if httpResponse.statusCode <= 299 {
@@ -104,6 +105,10 @@ struct ProfileModel {
                 PType = PropertyType.apartment
             case(".dorm"):
                 PType = PropertyType.dorm
+            case("apartment"):
+                PType = PropertyType.apartment
+            case("dorm"):
+                PType = PropertyType.dorm
             default:
                 PType = PropertyType.house
                 
@@ -117,7 +122,7 @@ struct ProfileModel {
                                                 contactEmail: listing.contactEmail,
                                                 heartList: listing.heartList,
                                                 phoneNumber: listing.phoneNumber,
-                                                rating: listing.rating,
+                                                rating: Int(listing.rating),
                                                 comments: listing.comments,
                                                 idCopy: listing.UUID)
             //print(listing.UUID)
@@ -230,9 +235,10 @@ struct ListingJSON: Codable {
     let propertyType: String
     let contactEmail: String
     let phoneNumber: String
-    let rating: Int
+    let rating: Double
     let comments: String
 }
+
 
 struct ContactsResponse: Codable {
     let contacts: [ListingJSONResponse]?
