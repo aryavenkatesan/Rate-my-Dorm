@@ -97,35 +97,6 @@ struct SearchView: View {
                                             Text(sublease.phoneNumber)
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
-                                            // Rating Section
-                                            if !sublease.reviews.isEmpty {
-                                                let avg = sublease.reviews.map { Double($0.rating) }.reduce(0, +) / Double(sublease.reviews.count)
-                                                
-                                                HStack(spacing: 2) {
-                                                    ForEach(0..<5) { i in
-                                                        Image(systemName: i < Int(avg.rounded()) ? "star.fill" : "star")
-                                                            .foregroundColor(i < Int(avg.rounded()) ? .yellow : .gray)
-                                                    }
-                                                    Text("(\(sublease.reviews.count))")
-                                                        .font(.caption)
-                                                        .foregroundColor(.gray)
-                                                }
-                                                .font(.caption)
-                                            }
-
-                                            HStack {
-                                                NavigationLink("Add Rating") {
-                                                    AddReviewView(sublease: sublease, vm: vm)
-                                                }
-                                                .foregroundColor(.blue)
-
-                                                NavigationLink("Read Reviews") {
-                                                    ReviewListView(reviews: sublease.reviews)
-                                                }
-                                                .foregroundColor(.blue)
-                                            }
-                                            .font(.caption)
-
                                         }
 
                                         Spacer()

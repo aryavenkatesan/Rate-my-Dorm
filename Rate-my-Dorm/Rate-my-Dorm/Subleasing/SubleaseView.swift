@@ -63,11 +63,11 @@ struct SubleaseView: View {
                     .pickerStyle(.segmented)
 
                     // Rating Picker (Optional)
-                    //Text("Rating")
-                        //.font(.headline)
-                        //.frame(maxWidth: .infinity, alignment: .leading)
+                    /*Text("Rating")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                    /*HStack {
+                    HStack {
                         ForEach(1...5, id: \.self) { star in
                             Image(systemName: vm.newSubleaseRating >= star ? "star.fill" : "star")
                                 .foregroundColor(.yellow)

@@ -18,8 +18,6 @@ struct Sublease: Identifiable {
     var liked: Bool = false
     var rating: Int = 0
     var comments: String = ""
-    
-    var reviews: [Review] = []
 }
 
 enum PropertyType: String, CaseIterable, Codable {
