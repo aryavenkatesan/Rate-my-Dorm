@@ -5,11 +5,11 @@ import SwiftUI
 @MainActor
 class RentViewModel: ObservableObject {
     @Published var subleases: [Sublease] = [
-        Sublease(name: "Cozy Apt", address: "123 College St", price: 850, distance: 0.5, propertyType: .apartment, email: "contact@cozyapt.com", phoneNumber: "123-456-7890"),
-        Sublease(name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm, email: "dormb12@school.edu", phoneNumber: "234-567-8901"),
-        Sublease(name: "Shared House", address: "789 Maple Ave", price: 950, distance: 1.2, propertyType: .house, email: "info@sharedhouse.com", phoneNumber: "345-678-9012")
-    ]
-
+        Sublease(creatorUsername: "user123", name: "Cozy Apt", address: "123 College St", price: 850, distance: 0.5, propertyType: .apartment, contactEmail: "contact@cozyapt.com", heartList: ["username"], phoneNumber: "123-456-7890"),
+        Sublease(creatorUsername: "user123", name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm, contactEmail: "dormb12@school.edu", heartList: ["username"], phoneNumber: "234-567-8901"),
+        Sublease(creatorUsername: "user123", name: "Shared House", address: "789 Maple Ave", price: 950, distance: 1.2, propertyType: .house, contactEmail: "info@sharedhouse.com", heartList: ["username"], phoneNumber: "345-678-9012")
+        ]
+        
     @Published var newSubleaseName: String = ""
     @Published var newSubleaseAddress: String = ""
     @Published var newSubleasePrice: Double? = nil
@@ -27,18 +27,20 @@ class RentViewModel: ObservableObject {
         }
 
         let newSublease = Sublease(
+            creatorUsername: "ADD PROPER FUNCTIONALITY TO THIS SHOULDNT BE TOO DIFFICULT",
             name: newSubleaseName,
             address: newSubleaseAddress,
-            price: price,
-            distance: distance,
+            price: newSubleasePrice!,
+            distance: newSubleaseDistance!,
             propertyType: newSubleasePropertyType,
-            email: newSubleaseEmail,
+            contactEmail: "CHANGE THIS TO TEXTFIELD INPUT",
+            heartList: [""],
             phoneNumber: newSubleasePhoneNumber,
             rating: newSubleaseRating,
-            comments: newSubleaseComments
-        )
-        subleases.append(newSublease)
-
+            comments: newSubleaseComments)
+        
+        subleases.append(newSublease);
+        
         resetSublease()
     }
 
@@ -55,8 +57,8 @@ class RentViewModel: ObservableObject {
     }
 
     func toggleLike(for sublease: Sublease) {
-        if let index = subleases.firstIndex(where: { $0.id == sublease.id }) {
-            subleases[index].liked.toggle()
-        }
+//        if let index = subleases.firstIndex(where: { $0.id == sublease.id }) {
+//            subleases[index].liked.toggle()
+//        }
     }
 }

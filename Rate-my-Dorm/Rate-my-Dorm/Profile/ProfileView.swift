@@ -17,7 +17,7 @@ struct ProfileView: View {
                     .ignoresSafeArea()
                     .opacity(0.15)
                 
-                // Large Circle Shape
+                // This won't work on other screen sizes
                 
                 Circle()
                     .fill(.blue)
@@ -39,9 +39,33 @@ struct ProfileView: View {
                     .offset(x: 0, y: -710) // Adjust position as needed
                     //.blendMode(.) // Blends with background
                     .opacity(0.3)
+            
+                    Button {
+                        print("logout")
+                        onboardingVM.logout()
+                    } label: {
+                        HStack {
+                            Text("Logout:")
+                                .fixedSize(horizontal: true, vertical: true)
+                                .allowsTightening(false)
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                        }
+                        .fontWeight(.black)
+                        .font(.custom("AmericanTypewriter", size: 16))
+                        .padding(32)
+                        .foregroundColor(Color(.systemBlue)) // Changed text color to white
+                        .frame(height: 30) // Fixed height
+                        .frame(maxWidth: 120)
+                    }
+                    .background(Color(.white)
+                        .opacity(1)) // Light blue background
+                    .clipShape(.capsule)
+                    .offset(x: 120, y: -370)
+                        
+
                 
                 VStack {
-                    Spacer()
+                    //ZStack frame for profile stuff
                     Spacer()
                     Spacer()
                     Spacer()
@@ -74,30 +98,11 @@ struct ProfileView: View {
                             .foregroundColor(.black)
                             .offset(x: 0, y: -7)
                     }
+                    .padding(.top, 25)
+                    
+
                     
                     Spacer()
-                    Spacer()
-                    
-                    
-                    Button {
-                        print("logout")
-                        onboardingVM.logout()
-                        
-                    } label: {
-                        HStack {
-                            Text("Logout:")
-                            Image(systemName: "rectangle.portrait.and.arrow.right")
-                        }
-                        .fontWeight(.black)
-                        .font(.custom("AmericanTypewriter", size: 24))
-                        .padding(32)
-                        .foregroundColor(.white) // Changed text color to white
-                        .frame(height: 50) // Fixed height
-                        .frame(maxWidth: 250)
-                    }
-                    .background(Color(.systemBlue).opacity(0.5)) // Light blue background
-                    .clipShape(.capsule)
-                    
                     Spacer()
                     Spacer()
                     Spacer()
@@ -105,6 +110,13 @@ struct ProfileView: View {
                     Spacer()
                     
                 }
+                
+                VStack {
+                    //ZStack frame for the menu things
+                    Text("Here")
+                        .padding(.top, 140)
+                }
+                
             }
         }
     }
