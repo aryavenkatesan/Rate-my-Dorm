@@ -20,6 +20,7 @@ class RentViewModel: ObservableObject {
     @Published var newSubleasePhoneNumber: String = ""
     @Published var newSubleaseRating: Int = 0
     @Published var newSubleaseComments: String = ""
+    var schoolName: String = "UNC Chapel Hill"
 
     func add(username: String) async {
         guard let price = newSubleasePrice, let distance = newSubleaseDistance else {
@@ -38,12 +39,13 @@ class RentViewModel: ObservableObject {
             heartList: [""],
             phoneNumber: newSubleasePhoneNumber,
             rating: newSubleaseRating,
-            comments: newSubleaseComments)
+            comments: newSubleaseComments,
+            school: schoolName)
         
         
         do {
             resetSublease()
-            let response = try await ProfileModel.uploadListingAPIRequest(listingInput: newSublease, usernameActual: username)
+            let response = try await ProfileModel.uploadListingAPIRequest(listingInput: newSublease, usernameActual: username, schoolActual: schoolName)
         } catch {
             print("Something went wrong 1")
         }
@@ -86,7 +88,16 @@ class RentViewModel: ObservableObject {
     func getAllSubleases() async {
         do {
             let response = try await ProfileModel.getAllListingsAPIRequest()
-            subleases = response
+            
+            var output: [Sublease] = []
+            
+            for s in response { //filter for only this school
+                if s.school == schoolName {
+                    output.append(s)
+                }
+            }
+       
+            subleases = output
         } catch {
             print("Something went wrong 3")
         }

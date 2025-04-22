@@ -5,9 +5,9 @@ const Listing = require("../models/listingModel")
 //@route POST /api/listing
 //@access public <- not best practice but im going fast
 const createListing = asyncHandler(async (req, res) => {
-    const { UUID, username, name, address, price, distance, propertyType, contactEmail, phoneNumber, rating, comments } = req.body;
+    const { UUID, username, name, address, price, distance, propertyType, contactEmail, phoneNumber, rating, comments, school } = req.body;
     console.log("StartedAPI")
-    if (!UUID || !username || !name || !address || !price || !distance || !propertyType || !contactEmail || !phoneNumber ){
+    if (!UUID || !username || !name || !address || !price || !distance || !propertyType || !contactEmail || !phoneNumber || !school ){
         res.status(400);
         console.log("fields error")
         throw new Error("All fields are required");
@@ -32,7 +32,8 @@ const createListing = asyncHandler(async (req, res) => {
         heartList : [""],
         phoneNumber,
         rating,
-        comments
+        comments,
+        school
     });
     print("Made listing and returning")
     res.status(201).json(req.body);

@@ -123,11 +123,13 @@ struct SearchView: View {
                             }
                         }
                         .padding(.top)
+                        .padding(.bottom, 60)
                     }
                 }
                 Spacer()
             }
             .navigationTitle("Search")
+            .background(Color(red: 0.9, green: 0.95, blue: 1.0)) 
         }
     }
 }

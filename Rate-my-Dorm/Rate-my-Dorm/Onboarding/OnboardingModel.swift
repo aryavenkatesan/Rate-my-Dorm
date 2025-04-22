@@ -74,11 +74,13 @@ struct OnboardingModel {
         
         return loginData
     }
+    
 }
 
 struct LoginResponseJSON: Decodable {
     let accessToken: String?
     let _id: String?
+    let school: String?
     let title: String?
     let message: String?
     let stackTrace: String?

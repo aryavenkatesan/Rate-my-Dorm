@@ -42,7 +42,7 @@ struct SubleaseListView: View {
     }
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: true) {
+        ScrollView() {
             LazyVStack(spacing: 12) {
                 if filteredSubleases.isEmpty {
                     Text("No results found.")

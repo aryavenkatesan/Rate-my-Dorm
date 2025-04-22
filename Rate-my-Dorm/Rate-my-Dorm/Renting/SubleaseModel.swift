@@ -19,7 +19,9 @@ struct Sublease: Identifiable {
     var phoneNumber: String
     var rating: Int = 0
     var comments: String = ""
+    var school: String
     var idCopy: String?
+    
 }
 
 enum PropertyType: String, CaseIterable, Codable {

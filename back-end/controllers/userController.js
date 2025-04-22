@@ -31,7 +31,7 @@ const registerUser = asyncHandler(async (req, res) => {
         password: hashedPassword,
     })
     if(user) {
-        res.status(201).json( { _id: user.id, email: user.email });
+        res.status(201).json( { _id: user.id, email: user.email, school: user.school });
     } else {
         res.status(400);
         throw new Error("User data was not valid");
@@ -55,7 +55,6 @@ const loginUser = asyncHandler(async (req, res) => {
         const accessToken = jwt.sign({
             user: {
                 username: user.username,
-                school: user.school,
                 id: user.id,
             },
         }, 
@@ -64,6 +63,7 @@ const loginUser = asyncHandler(async (req, res) => {
     );
         res.status(200).json({ 
             accessToken,
+            school: user.school,
             _id: user.id,
         });
     } else {

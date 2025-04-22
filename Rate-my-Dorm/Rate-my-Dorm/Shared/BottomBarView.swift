@@ -18,7 +18,7 @@ struct BottomBarView: View {
         UITabBar.appearance().isHidden = true
         self.Onboardingvm = onboardingVM
         self.Rentvm = rentVM
-        
+        self.Rentvm.schoolName = self.Onboardingvm.schoolActual
     }
     
     var body: some View {

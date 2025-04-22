@@ -28,27 +28,27 @@ struct SubleaseView: View {
                             .keyboardType(.decimalPad)
                     }
                     .padding()
-                    .background(Color.blue.opacity(0.05))
+                    .background(Color.blue.opacity(0.1))
                     .cornerRadius(10)
                     
                     // Email (Mandatory)
                     TextField("Email", text: $vm.newSubleaseEmail)
                         .keyboardType(.emailAddress)
                         .padding()
-                        .background(Color.blue.opacity(0.05))
+                        .background(Color.blue.opacity(0.1))
                         .cornerRadius(10)
 
                     // Phone Number (Mandatory)
                     TextField("Phone Number", text: $vm.newSubleasePhoneNumber)
                         .keyboardType(.phonePad)
                         .padding()
-                        .background(Color.blue.opacity(0.05))
+                        .background(Color.blue.opacity(0.1))
                         .cornerRadius(10)
 
                     // Comments (Optional)
                     TextField("Comments (optional)", text: $vm.newSubleaseComments, axis: .vertical)
                         .padding()
-                        .background(Color.blue.opacity(0.05))
+                        .background(Color.blue.opacity(0.1))
                         .cornerRadius(10)
 
                     // Type Picker
@@ -85,9 +85,7 @@ struct SubleaseView: View {
                     // Add Sublease Button
                     Button {
                         Task {
-                            print("Tryign to add")
                             await vm.add(username: username)
-                            print("Added?")
                         }
                     } label: {
                         Text("Add Sublease")
@@ -114,15 +112,10 @@ struct SubleaseView: View {
                     }
                 }
                 .padding()
+                .padding(.bottom, 60)
             }
             .navigationTitle("New Sublease")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-            }
+            //.background(Color(red: 0.9, green: 0.95, blue: 1.0))
         }
     }
 }

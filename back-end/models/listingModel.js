@@ -50,23 +50,11 @@ const listingSchema = mongoose.Schema({
     comments: {
         type: String,
         required: false,
+    },
+    school: {
+        type: String,
+        required: false,
     }
 });
 
 module.exports = mongoose.model("Listing", listingSchema)
-/*
-struct Sublease: Identifiable {
-    let id = UUID()
-    var name: String
-    var address: String
-    var price: Double
-    var distance: Double
-    var propertyType: PropertyType
-}
-
-enum PropertyType: String, CaseIterable, Codable {
-    case apartment
-    case dorm
-    case house
-}
-*/
