@@ -5,6 +5,8 @@
 //  Created by Arya Venkatesan on 4/15/25.
 //
 import Foundation
+import MapKit
+import CoreLocation
 
 struct Review: Identifiable {
     let id = UUID()
@@ -23,6 +25,9 @@ struct Sublease: Identifiable {
     var phoneNumber: String
     var liked: Bool = false
     var reviews: [Review] = []
+    
+    var latitude: Double?
+    var longitude: Double?
 
     var averageRating: Int {
         guard !reviews.isEmpty else { return 0 }
@@ -33,6 +38,11 @@ struct Sublease: Identifiable {
     var topComment: String {
         reviews.first(where: { (($0.comment?.isEmpty) == nil) })?.comment ?? ""
     }
+    
+    var coordinate: CLLocationCoordinate2D? {
+            guard let lat = latitude, let lon = longitude else { return nil }
+            return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+        }
 }
 
 

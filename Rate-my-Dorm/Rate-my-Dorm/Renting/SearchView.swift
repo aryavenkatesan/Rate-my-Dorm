@@ -1,4 +1,5 @@
 import SwiftUI
+import MapKit
 
 struct SearchView: View {
     @ObservedObject var vm: SubleaseViewModel
@@ -116,6 +117,7 @@ struct SearchResultsView: View {
                 }
             }
             .padding(.top)
+            .padding(.bottom, 40)
         }
     }
 }
@@ -123,9 +125,11 @@ struct SearchResultsView: View {
 
 struct SubleaseRow: View {
     var sublease: Sublease
-    @ObservedObject var vm: SubleaseViewModel // Inject the view model
+    @ObservedObject var vm: SubleaseViewModel
     @State private var showReviewSheet = false
     @State private var showReadReviewsSheet = false
+    @State private var showMapView = false // State to control the map view sheet
+    @State private var isMapAvailable = false // State to track if map coordinates are available
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -166,7 +170,7 @@ struct SubleaseRow: View {
                 }
             }
 
-            //add Review Button
+            // Add Review Button
             Button("Add Review") {
                 showReviewSheet = true
             }
@@ -175,6 +179,8 @@ struct SubleaseRow: View {
             .sheet(isPresented: $showReviewSheet) {
                 ReviewFormView(vm: vm, sublease: sublease)
             }
+
+            // Read Reviews Button
             Button("Read Reviews") {
                 showReadReviewsSheet = true
             }
@@ -183,9 +189,161 @@ struct SubleaseRow: View {
             .sheet(isPresented: $showReadReviewsSheet) {
                 ReviewListView(sublease: sublease)
             }
+            
+            // Wait for the map coordinates to be available
+            if isMapAvailable {
+                // View on Map Button
+                Button("View on Map") {
+                    showMapView = true // Show the map view when tapped
+                }
+                .font(.subheadline)
+                .foregroundColor(.blue)
+                .sheet(isPresented: $showMapView) {
+                    // Present the MapView in a sheet
+                    MapView(subleases: [sublease]) // Only pass the current sublease
+                }
+            } else {
+                // Show a loading indicator or message while waiting for coordinates
+                Text("Loading map...")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                    .padding(.top, 4)
+                    .onAppear {
+                        // Try to load the coordinates for the map
+                        loadMapCoordinates()
+                    }
+            }
+        }
+    }
+
+    // Function to try to load map coordinates
+    private func loadMapCoordinates() {
+        // Check if coordinates are available and update the state
+        if let latitude = sublease.latitude, let longitude = sublease.longitude {
+            isMapAvailable = true
+        } else {
+            // Wait for coordinates to be available if they're missing
+            // You can add a delay here if you want to simulate waiting or retrying
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                loadMapCoordinates() // Try again after a short delay
+            }
         }
     }
 }
+
+
+
+
+struct MapView: View {
+    @State private var region: MKCoordinateRegion
+    var subleases: [Sublease]
+    @Environment(\.dismiss) var dismiss
+
+    init(subleases: [Sublease]) {
+        self.subleases = subleases
+        // Calculate a center based on the subleases' coordinates
+        let averageLatitude = subleases.compactMap { $0.latitude }.reduce(0.0, +) / Double(subleases.count)
+        let averageLongitude = subleases.compactMap { $0.longitude }.reduce(0.0, +) / Double(subleases.count)
+        _region = State(initialValue: MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude),
+            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        ))
+    }
+
+    var body: some View {
+        VStack {
+            // White background for the Close button
+            ZStack {
+                RoundedRectangle(cornerRadius: 0)
+                    .fill(Color.white)
+                    .frame(height: 60) // White area height
+                    .shadow(radius: 5)
+
+                // Close button text inside the white area
+                Text("Close")
+                    .font(.headline)
+                    .foregroundColor(.blue)
+                    .padding()
+                    .onTapGesture {
+                        dismiss() // Dismiss the map view when tapped
+                    }
+            }
+            
+            // Map view
+            Map(coordinateRegion: $region, annotationItems: subleases) { sublease in
+                MapPin(coordinate: CLLocationCoordinate2D(latitude: sublease.latitude ?? 0.0, longitude: sublease.longitude ?? 0.0), tint: .blue)
+            }
+            .edgesIgnoringSafeArea(.all)
+            
+            // Overlay for zoom buttons
+            .overlay(
+                VStack {
+                    Spacer()
+
+                    HStack {
+                        Spacer()
+
+                        VStack {
+                            // White background for zoom buttons
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white)
+                                    .frame(width: 60, height: 120)
+                                    .shadow(radius: 5) // Optional shadow to give a floating effect
+
+                                VStack {
+                                    // Zoom in button
+                                    Button(action: {
+                                        zoomIn()
+                                    }) {
+                                        Image(systemName: "plus.circle.fill")
+                                            .font(.system(size: 30))
+                                            .foregroundColor(.blue)
+                                            .padding()
+                                    }
+
+                                    // Zoom out button
+                                    Button(action: {
+                                        zoomOut()
+                                    }) {
+                                        Image(systemName: "minus.circle.fill")
+                                            .font(.system(size: 30))
+                                            .foregroundColor(.blue)
+                                            .padding()
+                                    }
+                                }
+                            }
+                            .padding(.top, 20) // Optional top padding for better spacing
+                        }
+                        .padding(.trailing, 20)
+                    }
+                }
+            )
+        }
+    }
+
+    private func zoomIn() {
+        // Adjust zoom level for zooming in
+        region.span.latitudeDelta *= 0.8
+        region.span.longitudeDelta *= 0.8
+    }
+
+    private func zoomOut() {
+        // Adjust zoom level for zooming out
+        region.span.latitudeDelta *= 1.2
+        region.span.longitudeDelta *= 1.2
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 struct RatingView: View {

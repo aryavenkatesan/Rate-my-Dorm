@@ -14,7 +14,7 @@ struct SubleaseView: View {
                     // Name, Address, Rent per month, and Distance from campus
                     Group {
                         SubleaseTextField(label: "Name", text: $vm.newSubleaseName)
-                        SubleaseTextField(label: "Address", text: $vm.newSubleaseAddress)
+                        SubleaseTextField(label: "Full address", text: $vm.newSubleaseAddress)
                         SubleaseNumberTextField(label: "Rent per month", value: $vm.newSubleasePrice)
                         SubleaseNumberTextField(label: "Miles from campus", value: $vm.newSubleaseDistance)
                     }
@@ -31,7 +31,6 @@ struct SubleaseView: View {
                         set: { vm.newSubleaseComments = $0.isEmpty ? nil : $0 }
                     ), axis: .vertical)
 
-
                     // Type Picker
                     PropertyTypePicker(selectedType: $vm.newSubleasePropertyType)
 
@@ -46,14 +45,28 @@ struct SubleaseView: View {
             .navigationTitle("New Sublease")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
+                    Button("Clear") {
+                        // Clear the form fields when the button is tapped
+                        vm.newSubleaseName = ""
+                        vm.newSubleaseAddress = ""
+                        vm.newSubleasePrice = nil
+                        vm.newSubleaseDistance = nil
+                        vm.newSubleaseEmail = ""
+                        vm.newSubleasePhoneNumber = ""
+                        vm.newSubleaseComments = nil
+                        vm.newSubleasePropertyType = .apartment // Reset to a default property type, adjust as needed
+                        
+                        // Optionally, you can also clear the status message
+                        statusMessage = ""
+                        statusMessageColor = .clear
                     }
+                    .foregroundColor(.red) // You can adjust the color as needed
                 }
             }
         }
     }
 }
+
 
 struct SubleaseTextField: View {
     var label: String
