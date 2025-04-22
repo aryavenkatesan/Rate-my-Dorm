@@ -18,6 +18,8 @@ struct SearchView: View {
     @State private var latitude: Double?
     @State private var longitude: Double?
     @State private var coordinatesFetched: Bool = false  // New state variable
+    @State private var showMapView = false // State to control the map view sheet
+    @State private var isMapAvailable = false // State to track if map coordinates are available
 
     var filteredSubleases: [Sublease] {
         vm.subleases.filter { sublease in
@@ -125,31 +127,28 @@ struct SearchView: View {
                                                     .foregroundColor(.secondary)
                                                 
                                                 // Only display coordinates once they are fetched
-                                                if coordinatesFetched {
-                                                    Text("Latitude: \(latitude ?? 0), Longitude: \(longitude ?? 0)")
-                                                        .font(.footnote)
-                                                        .foregroundColor(.blue)
-                                                    
-                                                    // Map view showing location based on fetched coordinates
-                                                    if let latitude = latitude, let longitude = longitude {
-                                                        Map(coordinateRegion: .constant(
-                                                            MKCoordinateRegion(
-                                                                center: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
-                                                                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-                                                            )
-                                                        ))
-                                                        .frame(height: 200)  // Set a frame for the map
-                                                        .cornerRadius(10)
-                                                        .padding(.top, 8)
-                                                    }
-                                                } else {
-                                                    Text("Fetching coordinates...")
-                                                        .font(.footnote)
-                                                        .foregroundColor(.gray)
-                                                        .onAppear {
-                                                            geocode(address: sublease.address)
-                                                        }
-                                                }
+                                                if isMapAvailable {
+                                                                // View on Map Button
+                                                                Button("View on Map") {
+                                                                    showMapView = true // Show the map view when tapped
+                                                                }
+                                                                .font(.subheadline)
+                                                                .foregroundColor(.blue)
+                                                                .sheet(isPresented: $showMapView) {
+                                                                    // Present the MapView in a sheet
+                                                                    MapView(subleases: [sublease]) // Only pass the current sublease
+                                                                }
+                                                            } else {
+                                                                // Show a loading indicator or message while waiting for coordinates
+                                                                Text("Loading map...")
+                                                                    .font(.subheadline)
+                                                                    .foregroundColor(.gray)
+                                                                    .padding(.top, 4)
+                                                                    .onAppear {
+                                                                        // Try to load the coordinates for the map
+                                                                        loadMapCoordinates()
+                                                                    }
+                                                            }
                                             }
                                             
                                             Spacer()
@@ -182,6 +181,127 @@ struct SearchView: View {
         }
     }
 }
+
+struct MapView: View {
+    @State private var region: MKCoordinateRegion
+    var subleases: [Sublease]
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var latitude: Double?
+    @State private var longitude: Double?
+    
+    func geocode(address: String) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address) { (placemarks, error) in
+            if let coordinate = placemarks?.first?.location?.coordinate {
+                self.latitude = coordinate.latitude
+                self.longitude = coordinate.longitude
+            } else {
+                self.latitude = nil
+                self.longitude = nil
+                self.coordinatesFetched = false  // No coordinates found
+            }
+        }
+    }
+
+    var body: some View {
+        VStack {
+            // White background for the Close button
+            ZStack {
+                RoundedRectangle(cornerRadius: 0)
+                    .fill(Color.white)
+                    .frame(height: 60) // White area height
+                    .shadow(radius: 5)
+
+                // Close button text inside the white area
+                Text("Close")
+                    .font(.headline)
+                    .foregroundColor(.blue)
+                    .padding()
+                    .onTapGesture {
+                        dismiss() // Dismiss the map view when tapped
+                    }
+            }
+            
+            // Map view
+            Map(coordinateRegion: $region, annotationItems: subleases) { sublease in
+                MapPin(coordinate: CLLocationCoordinate2D(latitude: sublease.latitude ?? 0.0, longitude: sublease.longitude ?? 0.0), tint: .blue)
+            }
+            .edgesIgnoringSafeArea(.all)
+            
+            // Overlay for zoom buttons
+            .overlay(
+                VStack {
+                    Spacer()
+
+                    HStack {
+                        Spacer()
+
+                        VStack {
+                            // White background for zoom buttons
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white)
+                                    .frame(width: 60, height: 120)
+                                    .shadow(radius: 5) // Optional shadow to give a floating effect
+
+                                VStack {
+                                    // Zoom in button
+                                    Button(action: {
+                                        zoomIn()
+                                    }) {
+                                        Image(systemName: "plus.circle.fill")
+                                            .font(.system(size: 30))
+                                            .foregroundColor(.blue)
+                                            .padding()
+                                    }
+
+                                    // Zoom out button
+                                    Button(action: {
+                                        zoomOut()
+                                    }) {
+                                        Image(systemName: "minus.circle.fill")
+                                            .font(.system(size: 30))
+                                            .foregroundColor(.blue)
+                                            .padding()
+                                    }
+                                }
+                            }
+                            .padding(.top, 20) // Optional top padding for better spacing
+                        }
+                        .padding(.trailing, 20)
+                    }
+                }
+            )
+        }
+    }
+
+    private func zoomIn() {
+        // Adjust zoom level for zooming in
+        region.span.latitudeDelta *= 0.8
+        region.span.longitudeDelta *= 0.8
+    }
+
+    private func zoomOut() {
+        // Adjust zoom level for zooming out
+        region.span.latitudeDelta *= 1.2
+        region.span.longitudeDelta *= 1.2
+    }
+
+}
+
+private func loadMapCoordinates() {
+        // Check if coordinates are available and update the state
+        if let latitude = $latitude, let longitude = $longitude {
+            isMapAvailable = true
+        } else {
+            // Wait for coordinates to be available if they're missing
+            // You can add a delay here if you want to simulate waiting or retrying
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                loadMapCoordinates() // Try again after a short delay
+            }
+        }
+    }
 
 
 
