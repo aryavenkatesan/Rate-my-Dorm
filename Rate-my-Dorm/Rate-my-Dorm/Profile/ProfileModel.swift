@@ -121,6 +121,7 @@ struct ProfileModel {
             return output
         }
         
+        
         //this part should return the error string
         //realistically it won't throw so i'm leaving it
         //best practice says I should do extra legwork
