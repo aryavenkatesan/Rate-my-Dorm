@@ -333,6 +333,14 @@ struct MapView: View {
         region.span.latitudeDelta *= 1.2
         region.span.longitudeDelta *= 1.2
     }
+    
+    func geocode(_ address: String, completion: @escaping (CLLocationCoordinate2D?) -> Void) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address) { placemarks, error in
+            completion(placemarks?.first?.location?.coordinate)
+        }
+    }
+
 }
 
 

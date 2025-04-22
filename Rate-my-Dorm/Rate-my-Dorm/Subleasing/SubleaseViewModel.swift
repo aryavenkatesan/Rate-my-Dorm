@@ -15,9 +15,10 @@ class SubleaseViewModel: ObservableObject {
             propertyType: .apartment,
             email: "contact@union.com",
             phoneNumber: "123-456-7890",
-            reviews: [],
-            latitude: 35.919418,   // Hardcoded latitude for Union Apts
-            longitude: -79.052605 // Hardcoded longitude for Union Apts
+            reviews: []
+            //latitude: 35.919418,   // Hardcoded latitude for Union Apts
+            //longitude: -79.052605 // Hardcoded longitude for Union Apts
+            //Removed hardcoded lat and long for backend accessibility
             
         ),
         Sublease(
@@ -28,9 +29,10 @@ class SubleaseViewModel: ObservableObject {
             propertyType: .dorm,
             email: "dorm@unc.edu",
             phoneNumber: "234-567-8901",
-            reviews: [],
-            latitude: 35.901882,   // Hardcoded latitude for Ram Village 1
-            longitude: -79.046019 // Hardcoded longitude for Ram Village 1
+            reviews: []
+            //latitude: 35.901882,   // Hardcoded latitude for Ram Village 1
+            //longitude: -79.046019 // Hardcoded longitude for Ram Village 1
+            //Removed hardcoded lat and long for backend accessibility
             
         ),
         Sublease(
@@ -41,9 +43,10 @@ class SubleaseViewModel: ObservableObject {
             propertyType: .house,
             email: "info@horacehouse.com",
             phoneNumber: "345-678-9012",
-            reviews: [],
-            latitude: 35.917837,   // Hardcoded latitude for Horace Williams House
-            longitude: -79.045212 // Hardcoded longitude for Horace Williams House
+            reviews: []
+            //latitude: 35.917837,   // Hardcoded latitude for Horace Williams House
+            //longitude: -79.045212 // Hardcoded longitude for Horace Williams House
+            //Removed hardcoded lat and long for backend accessibility
             
         )
     ]
