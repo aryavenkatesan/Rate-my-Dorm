@@ -4,12 +4,12 @@ import SwiftUI
 
 @MainActor
 class RentViewModel: ObservableObject {
-//    @Published var subleases: [Sublease] = [
-//        Sublease(creatorUsername: "user123", name: "Cozy Apt", address: "123 College St", price: 850, distance: 0.5, propertyType: .apartment, contactEmail: "contact@cozyapt.com", heartList: ["username"], phoneNumber: "123-456-7890"),
-//        Sublease(creatorUsername: "user123", name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm, contactEmail: "dormb12@school.edu", heartList: ["username"], phoneNumber: "234-567-8901"),
-//        Sublease(creatorUsername: "user123", name: "Shared House", address: "789 Maple Ave", price: 950, distance: 1.2, propertyType: .house, contactEmail: "info@sharedhouse.com", heartList: ["username"], phoneNumber: "345-678-9012")
-//        ]
-    @Published var subleases: [Sublease] = []
+    @Published var subleases: [Sublease] = [
+        Sublease(creatorUsername: "user123", name: "Union Apts", address: "425 Hillsborough Street, Chapel Hill, NC, 27514", price: 850, distance: 0.9, propertyType: .apartment, contactEmail: "contact@union.com", heartList: ["username"], phoneNumber: "123-456-7890", school: "UNC Chapel Hill"),
+        Sublease(creatorUsername: "user123", name: "Ram Village 1", address: "560 Paul Hardin Dr, Chapel Hill, NC, 27514", price: 950, distance: 0.6, propertyType: .dorm, contactEmail: "dorm@unc.edu", heartList: ["username"], phoneNumber: "234-567-8901", school: "UNC Chapel Hill" ),
+        Sublease(creatorUsername: "user123", name: "Horace Williams House", address: "610 E Rosemary St, Chapel Hill, NC, 27514", price: 950, distance: 0.7, propertyType: .house, contactEmail: "info@horacehouse.com", heartList: ["username"], phoneNumber: "345-678-9012", school: "UNC Chapel Hill")
+        ]
+    //@Published var subleases: [Sublease] = []
         
     @Published var newSubleaseName: String = ""
     @Published var newSubleaseAddress: String = ""
