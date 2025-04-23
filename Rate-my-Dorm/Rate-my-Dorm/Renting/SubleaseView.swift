@@ -30,7 +30,7 @@ struct SubleaseView: View {
                     .padding()
                     .background(Color.blue.opacity(0.1))
                     .cornerRadius(10)
-                    
+
                     // Email (Mandatory)
                     TextField("Email", text: $vm.newSubleaseEmail)
                         .keyboardType(.emailAddress)
@@ -69,7 +69,7 @@ struct SubleaseView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     HStack {
-                        ForEach(1...5, id: \.self) { star in
+                        ForEach(1 ... 5, id: \.self) { star in
                             Image(systemName: vm.newSubleaseRating >= star ? "star.fill" : "star")
                                 .foregroundColor(.yellow)
                                 .onTapGesture {
@@ -97,11 +97,11 @@ struct SubleaseView: View {
                     }
                     .disabled(
                         vm.newSubleaseName.isEmpty ||
-                        vm.newSubleaseAddress.isEmpty ||
-                        vm.newSubleaseEmail.isEmpty ||
-                        vm.newSubleasePhoneNumber.isEmpty ||
-                        vm.newSubleasePrice == nil ||
-                        vm.newSubleaseDistance == nil
+                            vm.newSubleaseAddress.isEmpty ||
+                            vm.newSubleaseEmail.isEmpty ||
+                            vm.newSubleasePhoneNumber.isEmpty ||
+                            vm.newSubleasePrice == nil ||
+                            vm.newSubleaseDistance == nil
                     )
 
                     // Status Message
@@ -115,7 +115,7 @@ struct SubleaseView: View {
                 .padding(.bottom, 60)
             }
             .navigationTitle("New Sublease")
-            //.background(Color(red: 0.9, green: 0.95, blue: 1.0))
+            // .background(Color(red: 0.9, green: 0.95, blue: 1.0))
         }
     }
 }

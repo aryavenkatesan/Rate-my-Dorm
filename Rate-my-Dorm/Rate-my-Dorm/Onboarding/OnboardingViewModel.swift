@@ -5,8 +5,8 @@
 //  Created by Arya Venkatesan on 4/16/25.
 //
 
-import SwiftUI
 import Foundation
+import SwiftUI
 
 @MainActor
 class OnboardingViewModel: ObservableObject {
@@ -30,8 +30,8 @@ class OnboardingViewModel: ObservableObject {
 //        print("Password: \(passwordInput)")
 //        print("School:")
 //        print("---------------------------")
-//        
-//        
+//
+//
         do {
             let response = try await OnboardingModel.signupAPIRequest(usernameInput: usernameInput, passwordInput: passwordInput, schoolInput: schoolInput)
             if response.stackTrace == nil {
@@ -46,11 +46,11 @@ class OnboardingViewModel: ObservableObject {
             errormsg = "Error: Something went wrong"
         }
         
-        //resetFields()
+        // resetFields()
     }
     
     func login() async {
-        //add API functionality
+        // add API functionality
 //        print("---------------------------")
 //        print("Attempted Login")
 //        print("Username: \(usernameInput)")
@@ -72,9 +72,9 @@ class OnboardingViewModel: ObservableObject {
             errormsg = "Error: Something went wrong"
         }
         
-        //resetFields()
-        //should fields be reset after clicking the button?
-        //instagram.com doesn't so ill leave it commented
+        // resetFields()
+        // should fields be reset after clicking the button?
+        // instagram.com doesn't so ill leave it commented
     }
     
     public func resetFields() {

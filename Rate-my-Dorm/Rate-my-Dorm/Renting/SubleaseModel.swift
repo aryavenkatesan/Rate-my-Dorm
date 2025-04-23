@@ -8,7 +8,7 @@ import Foundation
 
 struct Sublease: Identifiable {
     let id = UUID()
-    let creatorUsername: String 
+    let creatorUsername: String
     var name: String
     var address: String
     var price: Double
@@ -21,7 +21,6 @@ struct Sublease: Identifiable {
     var comments: String = ""
     var school: String
     var idCopy: String?
-    
 }
 
 enum PropertyType: String, CaseIterable, Codable {

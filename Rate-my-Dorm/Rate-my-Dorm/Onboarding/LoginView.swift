@@ -49,40 +49,36 @@ struct LoginView: View {
                         .padding(16)
                         .background(Color.blue.opacity(0.05))
                         .cornerRadius(30)
-                    
                 }
 //                .background(Color.blue.opacity(0.05))
 //                .cornerRadius(30)
                     
-                    
-                //}
+                // }
 //                .scrollContentBackground(.hidden)
 //                .frame(maxWidth: .infinity)
                 
                 Spacer()
                 Spacer()
                 
-                
                 VStack {
-                    
                     Button {
-                        if (vm.usernameInput.isEmpty || vm.passwordInput.isEmpty) {
+                        if vm.usernameInput.isEmpty || vm.passwordInput.isEmpty {
                             vm.fieldError()
                             /* ------------------------
-                             //This is for font debugging don't delete
-                            for familyName in UIFont.familyNames {
-                                print(familyName)
+                              //This is for font debugging don't delete
+                             for familyName in UIFont.familyNames {
+                                 print(familyName)
                                 
-                                for fontName in UIFont.fontNames(forFamilyName: familyName) {
+                                 for fontName in UIFont.fontNames(forFamilyName: familyName) {
                                     
-                                    print("-- \(fontName)")
-                                }
-                            }
-                             ------------------------ */
+                                     print("-- \(fontName)")
+                                 }
+                             }
+                              ------------------------ */
                         } else {
                             Task {
                                 await vm.login()
-                                //vm.resetError()
+                                // vm.resetError()
                             }
                         }
                     } label: {
@@ -95,9 +91,7 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity)
                     .padding(16)
                     
-                   
                     NavigationLink("Signup", destination: SignupView(vm: vm))
-                    
                     
                     Text("\(vm.errormsg)")
                         .foregroundColor(.red)
@@ -109,7 +103,6 @@ struct LoginView: View {
                 Spacer()
                 
                 Spacer()
-                
             }
             .padding()
             .onAppear(perform: vm.resetAll)
@@ -117,7 +110,6 @@ struct LoginView: View {
     }
 }
     
-
 #Preview {
     @Previewable @StateObject var previewvm = OnboardingViewModel()
     LoginView(vm: previewvm)

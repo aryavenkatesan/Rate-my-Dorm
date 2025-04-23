@@ -23,14 +23,13 @@ struct SignupView: View {
                 
 //                Image("AppLogo")
                 Text("Signup!")
-                //                    .font(.system(.title, design: .rounded, weight: .bold))
+                    //                    .font(.system(.title, design: .rounded, weight: .bold))
                     .font(.custom("BubbleShineRegular", size: 100))
                     .fontWeight(.bold)
                     .opacity(0.75)
                     .multilineTextAlignment(.center)
                     .padding(32)
                     .foregroundColor(.black)
-                
                 
 //                Spacer()
                 
@@ -50,20 +49,17 @@ struct SignupView: View {
                     .background(Color.blue.opacity(0.05))
                     .cornerRadius(30)
                 //            Divider()
-                Picker ("School", selection: $vm.schoolInput) {
+                Picker("School", selection: $vm.schoolInput) {
                     ForEach(vm.Schools, id: \.self) { school in
                         Text(school)
                     }
                 }
                 .padding(.vertical, 8)
                 
-                
-                
                 Spacer()
                 
-                
                 Button {
-                    if (vm.usernameInput.isEmpty || vm.passwordInput.isEmpty) {
+                    if vm.usernameInput.isEmpty || vm.passwordInput.isEmpty {
                         vm.fieldError()
                     } else {
                         Task {
@@ -85,13 +81,11 @@ struct SignupView: View {
                     .foregroundColor(.red)
                     .padding(16)
                 
-                
                 Spacer()
                 
                 Spacer()
                 
                 Spacer()
-                
             }
             .padding()
             .onAppear(perform: vm.resetAll)

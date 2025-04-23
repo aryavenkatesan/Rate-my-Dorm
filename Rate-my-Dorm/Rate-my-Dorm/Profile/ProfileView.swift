@@ -28,56 +28,52 @@ struct ProfileView: View {
                     .fill(.blue)
                     .frame(width: 1500, height: 1500)
                     .offset(x: 0, y: -870) // Adjust position as needed
-                    //.blendMode(.) // Blends with background
+                    // .blendMode(.) // Blends with background
                     .opacity(0.8)
                 
                 Circle()
                     .fill(.blue)
                     .frame(width: 1500, height: 1500)
                     .offset(x: 0, y: -790) // Adjust position as needed
-                    //.blendMode(.) // Blends with background
+                    // .blendMode(.) // Blends with background
                     .opacity(0.5)
                 
                 Circle()
                     .fill(.blue)
                     .frame(width: 1500, height: 1500)
                     .offset(x: 0, y: -710) // Adjust position as needed
-                    //.blendMode(.) // Blends with background
+                    // .blendMode(.) // Blends with background
                     .opacity(0.3)
             
-                    Button {
-                        print("logout")
-                        onboardingVM.logout()
-                    } label: {
-                        HStack {
-                            Text("Logout:")
-                                .fixedSize(horizontal: true, vertical: true)
-                                .allowsTightening(false)
-                            Image(systemName: "rectangle.portrait.and.arrow.right")
-                        }
-                        .fontWeight(.black)
-                        .font(.custom("AmericanTypewriter", size: 16))
-                        .padding(32)
-                        .foregroundColor(Color(.systemBlue)) // Changed text color to white
-                        .frame(height: 30) // Fixed height
-                        .frame(maxWidth: 120)
+                Button {
+                    print("logout")
+                    onboardingVM.logout()
+                } label: {
+                    HStack {
+                        Text("Logout:")
+                            .fixedSize(horizontal: true, vertical: true)
+                            .allowsTightening(false)
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
                     }
-                    .background(Color(.white)
-                        .opacity(1)) // Light blue background
-                    .clipShape(.capsule)
-                    .offset(x: 120, y: -370)
+                    .fontWeight(.black)
+                    .font(.custom("AmericanTypewriter", size: 16))
+                    .padding(32)
+                    .foregroundColor(Color(.systemBlue)) // Changed text color to white
+                    .frame(height: 30) // Fixed height
+                    .frame(maxWidth: 120)
+                }
+                .background(Color(.white)
+                    .opacity(1)) // Light blue background
+                .clipShape(.capsule)
+                .offset(x: 120, y: -370)
                         
-
-                
                 VStack {
-                    //ZStack frame for profile stuff
+                    // ZStack frame for profile stuff
                     Spacer()
                     Spacer()
                     Spacer()
-                    
                     
                     VStack {
-                        
                         Image(systemName: "person.crop.circle")
                             .resizable()
                             .scaledToFit()
@@ -105,19 +101,16 @@ struct ProfileView: View {
                     }
                     .padding(.top, 25)
                     
-
-                    
                     Spacer()
                     Spacer()
                     Spacer()
                     Spacer()
                     Spacer()
                     Spacer()
-                    
                 }
                 
                 VStack {
-                    //ZStack frame for the menu things
+                    // ZStack frame for the menu things
                     Picker("", selection: $selectedTab) {
                         ForEach(selections, id: \.self) { selection in
                             Text(selection).tag(selection)
@@ -133,7 +126,7 @@ struct ProfileView: View {
                     .pickerStyle(SegmentedPickerStyle())
                     .frame(maxWidth: 240)
                     .padding(.horizontal, 20)
-                    //.padding(.top, 130)
+                    // .padding(.top, 130)
                     
                     VStack {
                         if selectedTab == "My Listings" {
@@ -144,7 +137,7 @@ struct ProfileView: View {
                                 username: onboardingVM.usernameActual
                             )
                             
-                        } else { //heartlist
+                        } else { // heartlist
                             SubleaseListView(
                                 filteredSubleases: vm.subleases,
                                 showTrashButton: false, // or true depending on context
@@ -157,10 +150,10 @@ struct ProfileView: View {
                 }
                 .offset(x: 0, y: 185)
             }
-            .onAppear(perform: { () -> Void in
+            .onAppear(perform: { () in
                 if hasAppeared {
                     Task {
-                        try? await Task.sleep(nanoseconds: 90_000_000)
+                        try? await Task.sleep(nanoseconds: 90000000)
                         selectedTab = "My Listings"
                         hasAppeared = false
                     }
