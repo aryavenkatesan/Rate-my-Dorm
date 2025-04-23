@@ -6,10 +6,10 @@ import SwiftUI
 class RentViewModel: ObservableObject {
     @Published var subleases: [Sublease] = [
         Sublease(creatorUsername: "user123", name: "Union Apts", address: "425 Hillsborough Street, Chapel Hill, NC, 27514", price: 850, distance: 0.9, propertyType: .apartment, contactEmail: "contact@union.com", heartList: ["username"], phoneNumber: "123-456-7890", school: "UNC Chapel Hill"),
-        Sublease(creatorUsername: "user123", name: "Ram Village 1", address: "560 Paul Hardin Dr, Chapel Hill, NC, 27514", price: 950, distance: 0.6, propertyType: .dorm, contactEmail: "dorm@unc.edu", heartList: ["username"], phoneNumber: "234-567-8901", school: "UNC Chapel Hill" ),
+        Sublease(creatorUsername: "user123", name: "Ram Village 1", address: "560 Paul Hardin Dr, Chapel Hill, NC, 27514", price: 950, distance: 0.6, propertyType: .dorm, contactEmail: "dorm@unc.edu", heartList: ["username"], phoneNumber: "234-567-8901", school: "UNC Chapel Hill"),
         Sublease(creatorUsername: "user123", name: "Horace Williams House", address: "610 E Rosemary St, Chapel Hill, NC, 27514", price: 950, distance: 0.7, propertyType: .house, contactEmail: "info@horacehouse.com", heartList: ["username"], phoneNumber: "345-678-9012", school: "UNC Chapel Hill")
-        ]
-    //@Published var subleases: [Sublease] = []
+    ]
+    // @Published var subleases: [Sublease] = []
         
     @Published var newSubleaseName: String = ""
     @Published var newSubleaseAddress: String = ""
@@ -42,15 +42,12 @@ class RentViewModel: ObservableObject {
             comments: newSubleaseComments,
             school: schoolName)
         
-        
         do {
             resetSublease()
             let response = try await ProfileModel.uploadListingAPIRequest(listingInput: newSublease, usernameActual: username, schoolActual: schoolName)
         } catch {
             print("Something went wrong 1")
         }
-        
-        
     }
 
     func resetSublease() {
@@ -79,7 +76,7 @@ class RentViewModel: ObservableObject {
         do {
             _ = try await ProfileModel.flipHeartStatusAPIRequest(listingInput: sublease, user: username)
 //            await getAllSubleases()
-            //let errmsg = response  This is not used
+            // let errmsg = response  This is not used
         } catch {
             print("Something went wrong 2")
         }
@@ -91,7 +88,7 @@ class RentViewModel: ObservableObject {
             
             var output: [Sublease] = []
             
-            for s in response { //filter for only this school
+            for s in response { // filter for only this school
                 if s.school == schoolName {
                     output.append(s)
                 }
@@ -108,8 +105,8 @@ class RentViewModel: ObservableObject {
             await getAllSubleases()
         }
         var output: [Sublease] = []
-        for s in subleases{
-            if (s.creatorUsername == username) {
+        for s in subleases {
+            if s.creatorUsername == username {
                 output.append(s)
             }
         }
@@ -121,8 +118,8 @@ class RentViewModel: ObservableObject {
             await getAllSubleases()
         }
         var output: [Sublease] = []
-        for s in subleases{
-            if (s.heartList.contains(username)) {
+        for s in subleases {
+            if s.heartList.contains(username) {
                 output.append(s)
             }
         }

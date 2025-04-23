@@ -42,7 +42,7 @@ struct SubleaseListView: View {
     }
     
     var body: some View {
-        ScrollView() {
+        ScrollView {
             LazyVStack(spacing: 12) {
                 if filteredSubleases.isEmpty {
                     Text("No results found.")
@@ -95,7 +95,7 @@ struct SubleaseRow: View {
                     .foregroundColor(.secondary)
                 
                 HStack(spacing: 2) {
-                    ForEach(0..<5) { i in
+                    ForEach(0 ..< 5) { i in
                         Image(systemName: i < sublease.rating ? "star.fill" : "star")
                             .foregroundColor(i < sublease.rating ? .yellow : .gray)
                     }
