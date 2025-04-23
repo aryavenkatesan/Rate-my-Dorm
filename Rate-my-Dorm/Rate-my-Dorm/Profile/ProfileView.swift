@@ -9,6 +9,11 @@ import SwiftUI
 
 struct ProfileView: View {
     var onboardingVM: OnboardingViewModel
+    var vm: RentViewModel
+    @State private var selectedTab = "Hearted Listings"
+    var selections = ["My Listings", "Hearted Listings"]
+    var filteredSubleases: [Sublease] = []
+    @AppStorage("hasProfileViewAppeared") private var hasAppeared = true
     
     var body: some View {
         NavigationView {
@@ -89,7 +94,7 @@ struct ProfileView: View {
                             .padding(.bottom, 0)
                             .foregroundColor(.black)
                         
-                        Text("School: \(onboardingVM.schoolInput)")
+                        Text("School: \(onboardingVM.schoolActual)")
                             .fontWeight(.black)
                             .font(.custom("HoeflerText-Regular", size: 26))
                             .opacity(0.75)
@@ -113,11 +118,54 @@ struct ProfileView: View {
                 
                 VStack {
                     //ZStack frame for the menu things
-                    Text("Here")
-                        .padding(.top, 140)
+                    Picker("", selection: $selectedTab) {
+                        ForEach(selections, id: \.self) { selection in
+                            Text(selection).tag(selection)
+//                            Task {
+//                                if (selectedTab == "My Listings"){
+//                                    await vm.getMyListings(username: onboardingVM.usernameActual)
+//                                } else {
+//                                    await vm.getMyHeartListings(username: onboardingVM.usernameActual)
+//                                }
+//                            }
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .frame(maxWidth: 240)
+                    .padding(.horizontal, 20)
+                    //.padding(.top, 130)
+                    
+                    VStack {
+                        if selectedTab == "My Listings" {
+                            SubleaseListView(
+                                filteredSubleases: vm.subleases,
+                                showTrashButton: true, // or true depending on context
+                                vm: vm,
+                                username: onboardingVM.usernameActual
+                            )
+                            
+                        } else { //heartlist
+                            SubleaseListView(
+                                filteredSubleases: vm.subleases,
+                                showTrashButton: false, // or true depending on context
+                                vm: vm,
+                                username: onboardingVM.usernameActual
+                            )
+                        }
+                    }
+                    .frame(width: 1200, height: 225)
                 }
-                
+                .offset(x: 0, y: 185)
             }
+            .onAppear(perform: { () -> Void in
+                if hasAppeared {
+                    Task {
+                        try? await Task.sleep(nanoseconds: 90_000_000)
+                        selectedTab = "My Listings"
+                        hasAppeared = false
+                    }
+                }
+            })
         }
     }
 }

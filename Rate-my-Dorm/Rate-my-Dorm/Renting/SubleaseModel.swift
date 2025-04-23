@@ -16,6 +16,12 @@ struct Sublease: Identifiable {
     var propertyType: PropertyType
     let contactEmail: String
     var heartList: [String]
+    var phoneNumber: String
+    var rating: Int = 0
+    var comments: String = ""
+    var school: String
+    var idCopy: String?
+    
 }
 
 enum PropertyType: String, CaseIterable, Codable {

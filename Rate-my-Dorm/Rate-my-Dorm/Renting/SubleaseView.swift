@@ -2,67 +2,120 @@ import SwiftUI
 
 struct SubleaseView: View {
     @ObservedObject var vm: RentViewModel
+    var username: String
     @Environment(\.dismiss) private var dismiss
 
-    @State private var name: String = ""
-    @State private var address: String = ""
-    @State private var price: String = ""
-    @State private var distance: String = ""
-    @State private var selectedType: PropertyType = .apartment
     @State private var statusMessage: String = ""
     @State private var statusMessageColor: Color = .clear
 
-    var isFormValid: Bool {
-        !name.isEmpty && !address.isEmpty &&
-        Double(price) != nil && Double(distance) != nil
-    }
-
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("Sublease Info")) {
-                  TextField("Name", text: $vm.newSubleaseName)
-                  TextField("Address", text: $vm.newSubleaseAddress)
-
-                  // use `format:` not `formatter:`
-                  TextField("Price",
-                            value: $vm.newSubleasePrice, format: .number)
-                    .keyboardType(.decimalPad)
-
-                  TextField("Distance (mi)",
-                            value: $vm.newSubleaseDistance,
-                            format: .number)
-                    .keyboardType(.decimalPad)
-
-                  Picker("Type", selection: $vm.newSubleasePropertyType) {
-                    ForEach(PropertyType.allCases, id:\.self) {
-                      Text($0.rawValue.capitalized)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    // Name, Address, Rent per month, and Distance from campus
+                    Group {
+                        TextField("Name", text: $vm.newSubleaseName)
+                        TextField("Address", text: $vm.newSubleaseAddress)
+                        TextField("",
+                                  value: $vm.newSubleasePrice,
+                                  format: .number,
+                                  prompt: Text("Rent per month"))
+                            .keyboardType(.decimalPad)
+                        TextField("",
+                                  value: $vm.newSubleaseDistance,
+                                  format: .number,
+                                  prompt: Text("Miles from campus"))
+                            .keyboardType(.decimalPad)
                     }
-                  }
-                }
-
-                Section {
-                  Button("Add Sublease", action: vm.add)
-                    .disabled(vm.newSubleaseName.isEmpty || vm.newSubleaseAddress.isEmpty)
-                }
-
-
-                Section {
-                    Text(statusMessage)
-                        .foregroundColor(statusMessageColor)
+                    .padding()
+                    .background(Color.blue.opacity(0.1))
+                    .cornerRadius(10)
+                    
+                    // Email (Mandatory)
+                    TextField("Email", text: $vm.newSubleaseEmail)
+                        .keyboardType(.emailAddress)
                         .padding()
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(10)
+
+                    // Phone Number (Mandatory)
+                    TextField("Phone Number", text: $vm.newSubleasePhoneNumber)
+                        .keyboardType(.phonePad)
+                        .padding()
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(10)
+
+                    // Comments (Optional)
+                    TextField("Comments (optional)", text: $vm.newSubleaseComments, axis: .vertical)
+                        .padding()
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(10)
+
+                    // Type Picker
+                    Text("Type")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Picker("Type", selection: $vm.newSubleasePropertyType) {
+                        ForEach(PropertyType.allCases, id: \.self) { type in
+                            Text(type.rawValue.capitalized).tag(type)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+
+                    // Rating Picker (Optional)
+                    Text("Rating")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    HStack {
+                        ForEach(1...5, id: \.self) { star in
+                            Image(systemName: vm.newSubleaseRating >= star ? "star.fill" : "star")
+                                .foregroundColor(.yellow)
+                                .onTapGesture {
+                                    if vm.newSubleaseRating == star {
+                                        vm.newSubleaseRating = 0
+                                    } else {
+                                        vm.newSubleaseRating = star
+                                    }
+                                }
+                        }
+                    }
+
+                    // Add Sublease Button
+                    Button {
+                        Task {
+                            await vm.add(username: username)
+                        }
+                    } label: {
+                        Text("Add Sublease")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .disabled(
+                        vm.newSubleaseName.isEmpty ||
+                        vm.newSubleaseAddress.isEmpty ||
+                        vm.newSubleaseEmail.isEmpty ||
+                        vm.newSubleasePhoneNumber.isEmpty ||
+                        vm.newSubleasePrice == nil ||
+                        vm.newSubleaseDistance == nil
+                    )
+
+                    // Status Message
+                    if !statusMessage.isEmpty {
+                        Text(statusMessage)
+                            .foregroundColor(statusMessageColor)
+                            .padding()
+                    }
                 }
+                .padding()
+                .padding(.bottom, 60)
             }
             .navigationTitle("New Sublease")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                        for s in vm.subleases {
-                            print(s.id)                        }
-                    }
-                }
-            }
+            //.background(Color(red: 0.9, green: 0.95, blue: 1.0))
         }
     }
 }
@@ -71,6 +124,5 @@ struct SubleaseView: View {
     let previewvm1 = OnboardingViewModel()
     let previewvm2 = RentViewModel()
 
-    BottomBarView(onboardingVM: previewvm1, rentVM: RentViewModel())
-    
+    BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
 }

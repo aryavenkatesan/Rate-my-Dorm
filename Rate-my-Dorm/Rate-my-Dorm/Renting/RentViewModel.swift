@@ -1,41 +1,140 @@
-//
-//  RentViewModel.swift
-//  Rate-my-Dorm
-//
-//  Created by Arya Venkatesan on 4/15/25.
-//
-
 import Foundation
 import Observation
 import SwiftUI
 
 @MainActor
 class RentViewModel: ObservableObject {
-    @Published var subleases: [Sublease] = [
-        Sublease(creatorUsername: "user123", name: "Cozy Apt", address: "123 College St", price: 850, distance: 0.5, propertyType: .apartment, contactEmail: "example@gmail.com", heartList: ["username"]),
-        Sublease(creatorUsername: "user123", name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm, contactEmail: "example@gmail.com", heartList: ["username"]),
-        Sublease(creatorUsername: "user123", name: "Shared House", address: "789 Maple Ave", price: 950, distance: 1.2, propertyType: .house, contactEmail: "example@gmail.com", heartList: ["username"])
-        ]
+//    @Published var subleases: [Sublease] = [
+//        Sublease(creatorUsername: "user123", name: "Cozy Apt", address: "123 College St", price: 850, distance: 0.5, propertyType: .apartment, contactEmail: "contact@cozyapt.com", heartList: ["username"], phoneNumber: "123-456-7890"),
+//        Sublease(creatorUsername: "user123", name: "Dorm B12", address: "Dormitory Lane", price: 600, distance: 0.2, propertyType: .dorm, contactEmail: "dormb12@school.edu", heartList: ["username"], phoneNumber: "234-567-8901"),
+//        Sublease(creatorUsername: "user123", name: "Shared House", address: "789 Maple Ave", price: 950, distance: 1.2, propertyType: .house, contactEmail: "info@sharedhouse.com", heartList: ["username"], phoneNumber: "345-678-9012")
+//        ]
+    @Published var subleases: [Sublease] = []
         
     @Published var newSubleaseName: String = ""
     @Published var newSubleaseAddress: String = ""
-    @Published var newSubleasePrice: Double = 0.0
-    @Published var newSubleaseDistance:Double = 0.0
+    @Published var newSubleasePrice: Double? = nil
+    @Published var newSubleaseDistance: Double? = nil
     @Published var newSubleasePropertyType = PropertyType.apartment
+    @Published var newSubleaseEmail: String = ""
+    @Published var newSubleasePhoneNumber: String = ""
+    @Published var newSubleaseRating: Int = 0
+    @Published var newSubleaseComments: String = ""
+    var schoolName: String = "UNC Chapel Hill"
 
-    func add() {
-        let newSublease = Sublease(creatorUsername: "ADD PROPER FUNCTIONALITY TO THIS SHOULDNT BE TOO DIFFICULT", name: newSubleaseName, address: newSubleaseAddress, price: newSubleasePrice, distance: newSubleaseDistance, propertyType: newSubleasePropertyType, contactEmail: "CHANGE THIS TO TEXTFIELD INPUT", heartList: [""])
-        subleases.append(newSublease);
+    func add(username: String) async {
+        guard let price = newSubleasePrice, let distance = newSubleaseDistance else {
+            print("Price or distance is nil. Cannot add sublease.")
+            return
+        }
         
-        resetSublease()
+        let newSublease = Sublease(
+            creatorUsername: username,
+            name: newSubleaseName,
+            address: newSubleaseAddress,
+            price: newSubleasePrice!,
+            distance: newSubleaseDistance!,
+            propertyType: newSubleasePropertyType,
+            contactEmail: newSubleaseEmail,
+            heartList: [""],
+            phoneNumber: newSubleasePhoneNumber,
+            rating: newSubleaseRating,
+            comments: newSubleaseComments,
+            school: schoolName)
+        
+        
+        do {
+            resetSublease()
+            let response = try await ProfileModel.uploadListingAPIRequest(listingInput: newSublease, usernameActual: username, schoolActual: schoolName)
+        } catch {
+            print("Something went wrong 1")
+        }
+        
+        
     }
-    
-    func resetSublease(){
+
+    func resetSublease() {
         newSubleaseName = ""
         newSubleaseAddress = ""
-        newSubleasePrice = 0.0
-        newSubleaseDistance = 0.0
+        newSubleasePrice = nil
+        newSubleaseDistance = nil
         newSubleasePropertyType = PropertyType.apartment
+        newSubleaseEmail = ""
+        newSubleasePhoneNumber = ""
+        newSubleaseRating = 0
+        newSubleaseComments = ""
     }
+
+    func toggleLike(sublease: Sublease, username: String) async {
+        for index in subleases.indices {
+            if subleases[index].id == sublease.id {
+                if subleases[index].heartList.contains(username) {
+                    subleases[index].heartList.removeAll { $0 == username }
+                } else {
+                    subleases[index].heartList.append(username)
+                }
+            }
+        }
+        
+        do {
+            _ = try await ProfileModel.flipHeartStatusAPIRequest(listingInput: sublease, user: username)
+//            await getAllSubleases()
+            //let errmsg = response  This is not used
+        } catch {
+            print("Something went wrong 2")
+        }
+    }
+    
+    func getAllSubleases() async {
+        do {
+            let response = try await ProfileModel.getAllListingsAPIRequest()
+            
+            var output: [Sublease] = []
+            
+            for s in response { //filter for only this school
+                if s.school == schoolName {
+                    output.append(s)
+                }
+            }
        
+            subleases = output
+        } catch {
+            print("Something went wrong 3")
+        }
+    }
+    
+    func getMyListings(username: String) async {
+        Task {
+            await getAllSubleases()
+        }
+        var output: [Sublease] = []
+        for s in subleases{
+            if (s.creatorUsername == username) {
+                output.append(s)
+            }
+        }
+        subleases = output
+    }
+    
+    func getMyHeartListings(username: String) async {
+        Task {
+            await getAllSubleases()
+        }
+        var output: [Sublease] = []
+        for s in subleases{
+            if (s.heartList.contains(username)) {
+                output.append(s)
+            }
+        }
+        subleases = output
+    }
+    
+    func deleteListing(sublease: Sublease) async {
+        do {
+            let errmsg = try await ProfileModel.deleteAPIRequest(listingInput: sublease)
+            
+        } catch {
+            print("Something went wrong 4")
+        }
+    }
 }
