@@ -24,25 +24,59 @@ enum ProfileModel {
         request.httpMethod = "POST"
 
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let json = ListingJSON(
-            UUID: "\(listingInput.id)",
-            username: usernameActual,
-            name: listingInput.name,
-            address: listingInput.address,
-            price: listingInput.price,
-            distance: listingInput.distance,
-            propertyType: "\(listingInput.propertyType)",
-            contactEmail: listingInput.contactEmail,
-            phoneNumber: listingInput.phoneNumber,
-            rating: Double(listingInput.rating),
-            comments: listingInput.comments,
-            school: schoolActual
-        )
+        
+        var json: ListingJSON
+        if listingInput.comments.count < 2 {
+            json = ListingJSON(
+                UUID: "\(listingInput.id)",
+                username: usernameActual,
+                name: listingInput.name,
+                address: listingInput.address,
+                price: listingInput.price,
+                distance: listingInput.distance,
+                propertyType: ".\(listingInput.propertyType)",
+                contactEmail: listingInput.contactEmail,
+                phoneNumber: listingInput.phoneNumber,
+                rating: Double(listingInput.rating),
+                comments: "No comments",
+                school: schoolActual
+            )
+        } else {
+            json = ListingJSON(
+                UUID: "\(listingInput.id)",
+                username: usernameActual,
+                name: listingInput.name,
+                address: listingInput.address,
+                price: listingInput.price,
+                distance: listingInput.distance,
+                propertyType: ".\(listingInput.propertyType)",
+                contactEmail: listingInput.contactEmail,
+                phoneNumber: listingInput.phoneNumber,
+                rating: Double(listingInput.rating),
+                comments: listingInput.comments,
+                school: schoolActual
+            )
+        }
+        
+        print(json)
+//        {
+//          "UUID": "2E1337D7-82D4-4198-B614-43BE9264FE61",
+//          "username": "user321",
+//          "name": "Lebron",
+//          "address": "123 College St",
+//          "price": 850,
+//          "distance": 0.5,
+//          "propertyType": ".apartment",
+//          "contactEmail": "example@gmail.com",
+//          "phoneNumber": "1234567890",
+//          "rating": 3,
+//          "comments": "I like this place",
+//          "school": "Duke"
+//        }
 
         let encoded: Data = try encoder.encode(json)
         request.httpBody = encoded
-        print(encoded)
+        
         let (data, response) = try await URLSession.shared.data(for: request)
         let jsonResponse = try decoder.decode(HeartResponse.self, from: data)
 

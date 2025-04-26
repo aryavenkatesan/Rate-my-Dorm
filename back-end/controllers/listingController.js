@@ -35,7 +35,7 @@ const createListing = asyncHandler(async (req, res) => {
         comments,
         school
     });
-    print("Made listing and returning")
+    console.log("Made listing and returning")
     res.status(201).json(req.body);
 });
 

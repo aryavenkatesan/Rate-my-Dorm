@@ -28,7 +28,7 @@ class RentViewModel: ObservableObject {
             return
         }
         
-        let newSublease = Sublease(
+        var newSublease = Sublease(
             creatorUsername: username,
             name: newSubleaseName,
             address: newSubleaseAddress,
