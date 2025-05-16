@@ -18,7 +18,7 @@ class OnboardingViewModel: ObservableObject {
     @Published var userID: String = ""
     @Published var AuthToken: String = ""
     @Published var usernameActual: String = "A"
-    @Published var schoolActual: String = "UNC Chapel Hill"
+    var schoolActual: String = "UNC Chapel Hill"
     
     let Schools: [String] = ["UNC Chapel Hill", "UNC Charlotte", "Duke", "NC State"]
     

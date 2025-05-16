@@ -10,10 +10,10 @@ import SwiftUI
 struct ProfileView: View {
     var onboardingVM: OnboardingViewModel
     var vm: RentViewModel
-    @State private var selectedTab = "Hearted Listings"
+    @State private var selectedTab = " "
     var selections = ["My Listings", "Hearted Listings"]
     var filteredSubleases: [Sublease] = []
-    @AppStorage("hasProfileViewAppeared") private var hasAppeared = true
+    var hasAppeared = true
     
     var body: some View {
         NavigationView {
@@ -126,6 +126,9 @@ struct ProfileView: View {
                     .pickerStyle(SegmentedPickerStyle())
                     .frame(maxWidth: 240)
                     .padding(.horizontal, 20)
+                    .onChange(of: selectedTab) {
+                        vm.allowProfileSubcardInit()
+                    }
                     // .padding(.top, 130)
                     
                     VStack {
@@ -137,28 +140,26 @@ struct ProfileView: View {
                                 username: onboardingVM.usernameActual
                             )
                             
-                        } else { // heartlist
+                        } else if selectedTab == "Hearted Listings" { // heartlist
                             SubleaseListView(
                                 filteredSubleases: vm.subleases,
                                 showTrashButton: false, // or true depending on context
                                 vm: vm,
                                 username: onboardingVM.usernameActual
                             )
+                        } else {
+                            
                         }
                     }
                     .frame(width: 1200, height: 225)
                 }
                 .offset(x: 0, y: 185)
             }
-            .onAppear(perform: { () in
-                if hasAppeared {
-                    Task {
-                        try? await Task.sleep(nanoseconds: 90000000)
-                        selectedTab = "My Listings"
-                        hasAppeared = false
-                    }
+            .onAppear {
+                Task {
+                    await vm.getAllSubleases()
                 }
-            })
+            }
         }
     }
 }

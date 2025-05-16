@@ -3,6 +3,7 @@ import SwiftUI
 struct SubleaseView: View {
     @ObservedObject var vm: RentViewModel
     var username: String
+    var school: String
     @Environment(\.dismiss) private var dismiss
 
     @State private var statusMessage: String = ""
@@ -115,6 +116,9 @@ struct SubleaseView: View {
                 .padding(.bottom, 60)
             }
             .navigationTitle("New Sublease")
+            .onAppear(){
+                vm.schoolName = school
+            }
             // .background(Color(red: 0.9, green: 0.95, blue: 1.0))
         }
     }

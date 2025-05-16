@@ -58,7 +58,6 @@ enum ProfileModel {
             )
         }
         
-        print(json)
 //        {
 //          "UUID": "2E1337D7-82D4-4198-B614-43BE9264FE61",
 //          "username": "user321",
@@ -156,7 +155,7 @@ enum ProfileModel {
         // realistically it won't throw so i'm leaving it
         // best practice says I should do extra legwork
         print("Error happened in getAllListingsAPIRequest")
-        return output
+        return []
     }
 
     static func flipHeartStatusAPIRequest(listingInput: Sublease, user: String) async throws -> String {

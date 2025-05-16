@@ -6,6 +6,7 @@ struct SearchView: View {
     @ObservedObject var vm: RentViewModel
     @State private var showFilterSheet = false
     let username: String
+    let school: String
 
     @State private var searchText: String = ""
     @State private var maxPrice: Double = 5000
@@ -104,6 +105,9 @@ struct SearchView: View {
             }
             .navigationTitle("Search")
             .background(Color(red: 0.9, green: 0.95, blue: 1.0))
+            .onAppear(){
+                vm.schoolName = school
+            }
         }
     }
 }

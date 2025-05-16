@@ -18,26 +18,31 @@ struct SubleaseListView: View {
         self.vm = vm
         self.username = username
         
-        Task {
-            await vm.getAllSubleases()
-        }
-        
-        if showTrashButton {
-            var output: [Sublease] = []
-            for s in vm.subleases {
-                if s.creatorUsername == username {
-                    output.append(s)
-                }
+        if vm.initializeProfileSubcards {
+            
+            Task {
+                await vm.getAllSubleases()
             }
-            self._filteredSubleases = State(initialValue: output)
-        } else {
-            var output: [Sublease] = []
-            for s in vm.subleases {
-                if s.heartList.contains(username) {
-                    output.append(s)
+            
+            if showTrashButton {
+                var output: [Sublease] = []
+                for s in vm.subleases {
+                    if s.creatorUsername == username {
+                        output.append(s)
+                    }
                 }
+                self._filteredSubleases = State(initialValue: output)
+            } else {
+                var output: [Sublease] = []
+                for s in vm.subleases {
+                    if s.heartList.contains(username) {
+                        output.append(s)
+                    }
+                }
+                self._filteredSubleases = State(initialValue: output)
             }
-            self._filteredSubleases = State(initialValue: output)
+            
+            vm.initializeProfileSubcards = false
         }
     }
     

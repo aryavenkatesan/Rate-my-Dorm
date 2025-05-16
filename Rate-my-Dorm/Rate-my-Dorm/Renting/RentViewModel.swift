@@ -20,7 +20,8 @@ class RentViewModel: ObservableObject {
     @Published var newSubleasePhoneNumber: String = ""
     @Published var newSubleaseRating: Int = 0
     @Published var newSubleaseComments: String = ""
-    var schoolName: String = "UNC Chapel Hill"
+    @Published var schoolName: String = "UNC Chapel Hill" // this may be the root cause of the school problem. Either here or in bottom bar view init
+    var initializeProfileSubcards: Bool = true
 
     func add(username: String) async {
         guard let price = newSubleasePrice, let distance = newSubleaseDistance else {
@@ -133,5 +134,12 @@ class RentViewModel: ObservableObject {
         } catch {
             print("Something went wrong 4")
         }
+    }
+    
+    func allowProfileSubcardInit() {
+        initializeProfileSubcards = true
+    }
+    func goDuke() {
+        schoolName = "Duke"
     }
 }

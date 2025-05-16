@@ -44,7 +44,6 @@ const createListing = asyncHandler(async (req, res) => {
 //@access public <- not best practice but im going fast
 const getListings = asyncHandler(async (req, res) => {
     const contacts = await Listing.find( {} );
-    console.log("Attempted get")
     res.status(200).json({ contacts });
 });
 
