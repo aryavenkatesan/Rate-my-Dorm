@@ -13,9 +13,8 @@ enum ProfileModel {
 
     static let baseUrl = "http://localhost:5001/"
 
-    static func uploadListingAPIRequest(listingInput: Sublease, usernameActual: String, schoolActual: String) async throws -> String {
-        // TODO: Implement
-        let workingUrl = baseUrl + "api/listing"
+    static func uploadListingAPIRequest(listingInput: Sublease, APIInfoBus: profileInfoForApi) async throws -> String {
+        let workingUrl = baseUrl + "api/listing/create"
         guard let url = URL(string: workingUrl) else {
             fatalError("Invalid URL")
         }
@@ -24,54 +23,28 @@ enum ProfileModel {
         request.httpMethod = "POST"
 
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(APIInfoBus.jwt)", forHTTPHeaderField: "authorization")
         
         var json: ListingJSON
+        var commentActual = listingInput.comments
         if listingInput.comments.count < 2 {
-            json = ListingJSON(
-                UUID: "\(listingInput.id)",
-                username: usernameActual,
-                name: listingInput.name,
-                address: listingInput.address,
-                price: listingInput.price,
-                distance: listingInput.distance,
-                propertyType: ".\(listingInput.propertyType)",
-                contactEmail: listingInput.contactEmail,
-                phoneNumber: listingInput.phoneNumber,
-                rating: Double(listingInput.rating),
-                comments: "No comments",
-                school: schoolActual
-            )
-        } else {
-            json = ListingJSON(
-                UUID: "\(listingInput.id)",
-                username: usernameActual,
-                name: listingInput.name,
-                address: listingInput.address,
-                price: listingInput.price,
-                distance: listingInput.distance,
-                propertyType: ".\(listingInput.propertyType)",
-                contactEmail: listingInput.contactEmail,
-                phoneNumber: listingInput.phoneNumber,
-                rating: Double(listingInput.rating),
-                comments: listingInput.comments,
-                school: schoolActual
-            )
+            commentActual = "No comments"
         }
+        json = ListingJSON(
+            UUID: "\(listingInput.id)",
+            username: APIInfoBus.username,
+            name: listingInput.name,
+            address: listingInput.address,
+            price: listingInput.price,
+            distance: listingInput.distance,
+            propertyType: ".\(listingInput.propertyType)",
+            contactEmail: listingInput.contactEmail,
+            phoneNumber: listingInput.phoneNumber,
+            rating: Double(listingInput.rating),
+            comments: commentActual,
+            school: APIInfoBus.school
+        )
         
-//        {
-//          "UUID": "2E1337D7-82D4-4198-B614-43BE9264FE61",
-//          "username": "user321",
-//          "name": "Lebron",
-//          "address": "123 College St",
-//          "price": 850,
-//          "distance": 0.5,
-//          "propertyType": ".apartment",
-//          "contactEmail": "example@gmail.com",
-//          "phoneNumber": "1234567890",
-//          "rating": 3,
-//          "comments": "I like this place",
-//          "school": "Duke"
-//        }
 
         let encoded: Data = try encoder.encode(json)
         request.httpBody = encoded
@@ -92,7 +65,7 @@ enum ProfileModel {
         }
     }
 
-    static func getAllListingsAPIRequest() async throws -> [Sublease] {
+    static func getAllListingsAPIRequest(APIInfoBus: profileInfoForApi) async throws -> [Sublease] {
         // TODO: Implement
         let workingUrl = baseUrl + "api/listing"
         guard let url = URL(string: workingUrl) else {
@@ -103,6 +76,7 @@ enum ProfileModel {
         request.httpMethod = "GET"
 
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(APIInfoBus.jwt)", forHTTPHeaderField: "authorization")
 
         let (data, response) = try await URLSession.shared.data(for: request)
         let jsonResponse = try decoder.decode(ContactsResponse.self, from: data) // this should be changed
@@ -158,9 +132,9 @@ enum ProfileModel {
         return []
     }
 
-    static func flipHeartStatusAPIRequest(listingInput: Sublease, user: String) async throws -> String {
+    static func flipHeartStatusAPIRequest(listingInput: Sublease, APIInfoBus: profileInfoForApi) async throws -> String {
         // TODO: Implement
-        let workingUrl = baseUrl + "api/listing/"
+        let workingUrl = baseUrl + "api/listing/heart"
         guard let url = URL(string: workingUrl) else {
             fatalError("Invalid URL")
         }
@@ -169,10 +143,11 @@ enum ProfileModel {
         request.httpMethod = "PUT"
 
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(APIInfoBus.jwt)", forHTTPHeaderField: "authorization")
 
         let json: [String: String] = [
             "UUID": "\(listingInput.idCopy!)",
-            "username": user
+            "username": APIInfoBus.username
         ]
         print("\(json)")
         let encoded: Data = try encoder.encode(json)
@@ -194,7 +169,7 @@ enum ProfileModel {
         }
     }
 
-    static func deleteAPIRequest(listingInput: Sublease) async throws -> String {
+    static func deleteAPIRequest(listingInput: Sublease, APIInfoBus: profileInfoForApi) async throws -> String {
         // TODO: Implement
         let workingUrl = baseUrl + "api/listing/"
         guard let url = URL(string: workingUrl) else {
@@ -205,6 +180,7 @@ enum ProfileModel {
         request.httpMethod = "DELETE"
 
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(APIInfoBus.jwt)", forHTTPHeaderField: "authorization")
 
         let json = [
             "UUID": "\(listingInput.idCopy!)"
@@ -228,86 +204,3 @@ enum ProfileModel {
         }
     }
 }
-
-struct ListingResponseJSON: Decodable {
-    let accessToken: String?
-    let _id: String?
-    let title: String?
-    let message: String?
-    let stackTrace: String?
-}
-
-struct ListingJSON: Codable {
-    let UUID: String
-    let username: String
-    let name: String
-    let address: String
-    let price: Double
-    let distance: Double
-    let propertyType: String
-    let contactEmail: String
-    let phoneNumber: String
-    let rating: Double
-    let comments: String
-    let school: String
-}
-
-struct ContactsResponse: Codable {
-    let contacts: [ListingJSONResponse]?
-    let title: String?
-    let message: String?
-    let stackTrace: String?
-}
-
-struct HeartResponse: Codable {
-    let _id: String?
-    let UUID: String?
-    let username: String?
-    let name: String?
-    let address: String?
-    let price: Double?
-    let distance: Double?
-    let propertyType: String?
-    let contactEmail: String?
-    let heartList: [String]?
-    let phoneNumber: String?
-    let rating: Int?
-    let comments: String?
-    let __v: Int?
-    let title: String?
-    let message: String?
-    let school: String?
-    let stackTrace: String?
-}
-
-struct ListingJSONResponse: Codable {
-    let _id: String
-    let UUID: String
-    let username: String
-    let name: String
-    let address: String
-    let price: Double
-    let distance: Double
-    let propertyType: String
-    let contactEmail: String
-    let heartList: [String]
-    let phoneNumber: String
-    let rating: Int
-    let comments: String
-    let school: String
-    let __v: Int
-}
-
-// {
-// "UUID": "2E1337D7-82D4-4198-B614-43BE9264FE61",
-// "username": "user321",
-// "name": "Cozy Apt",
-// "address": "123 College St",
-// "price": 850,
-// "distance": 0.5,
-// "propertyType": ".apartment",
-// "contactEmail": "example@gmail.com",
-// "phoneNumber": "1234567890",
-// "rating": 4,
-// "comments": "I like this place"
-// }

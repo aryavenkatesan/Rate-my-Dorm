@@ -15,7 +15,6 @@ struct LoginView: View {
                 Spacer()
                 Spacer()
                 Text("Welcome!")
-//                    .font(.system(.title, design: .rounded, weight: .bold))
                     .font(.custom("BubbleShineRegular", size: 100))
                     .fontWeight(.bold)
                     .opacity(0.75)
@@ -23,17 +22,12 @@ struct LoginView: View {
                     .padding(32)
                     .foregroundColor(.black)
                 Spacer()
-                
-//                Text("Logo here or something")
+
                 Image("AppLogo")
                 
                 Spacer()
-                
                 Spacer()
-//
                 Spacer()
-//
-//                Form {
                     
                 VStack {
                     TextField("Username", text: $vm.usernameInput)
@@ -41,7 +35,7 @@ struct LoginView: View {
                         .background(Color.blue.opacity(0.05))
                         .cornerRadius(30)
                     
-//                                        Divider()
+
                     Text("")
                     
                     SecureField("Password", text: $vm.passwordInput)
@@ -50,12 +44,6 @@ struct LoginView: View {
                         .background(Color.blue.opacity(0.05))
                         .cornerRadius(30)
                 }
-//                .background(Color.blue.opacity(0.05))
-//                .cornerRadius(30)
-                    
-                // }
-//                .scrollContentBackground(.hidden)
-//                .frame(maxWidth: .infinity)
                 
                 Spacer()
                 Spacer()
@@ -78,7 +66,6 @@ struct LoginView: View {
                         } else {
                             Task {
                                 await vm.login()
-                                // vm.resetError()
                             }
                         }
                     } label: {
@@ -98,10 +85,8 @@ struct LoginView: View {
                         .padding(16)
                 }
                 
-//                Spacer()
                 
                 Spacer()
-                
                 Spacer()
             }
             .padding()

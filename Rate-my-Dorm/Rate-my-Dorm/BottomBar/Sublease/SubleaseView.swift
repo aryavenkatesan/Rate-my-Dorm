@@ -2,8 +2,6 @@ import SwiftUI
 
 struct SubleaseView: View {
     @ObservedObject var vm: RentViewModel
-    var username: String
-    var school: String
     @Environment(\.dismiss) private var dismiss
 
     @State private var statusMessage: String = ""
@@ -86,7 +84,7 @@ struct SubleaseView: View {
                     // Add Sublease Button
                     Button {
                         Task {
-                            await vm.add(username: username)
+                            await vm.add()
                         }
                     } label: {
                         Text("Add Sublease")
@@ -116,9 +114,9 @@ struct SubleaseView: View {
                 .padding(.bottom, 60)
             }
             .navigationTitle("New Sublease")
-            .onAppear(){
-                vm.schoolName = school
-            }
+//            .onAppear(){ //tagged for deletion
+//                vm.schoolName = APIInfoBus.school
+//            }
             // .background(Color(red: 0.9, green: 0.95, blue: 1.0))
         }
     }

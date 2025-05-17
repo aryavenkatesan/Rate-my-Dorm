@@ -23,6 +23,7 @@ struct ProfileView: View {
                     .opacity(0.15)
                 
                 // This won't work on other screen sizes
+                // me from the future, it actually does for whatever reason
                 
                 Circle()
                     .fill(.blue)
@@ -68,7 +69,6 @@ struct ProfileView: View {
                 .offset(x: 120, y: -370)
                         
                 VStack {
-                    // ZStack frame for profile stuff
                     Spacer()
                     Spacer()
                     Spacer()
@@ -90,7 +90,7 @@ struct ProfileView: View {
                             .padding(.bottom, 0)
                             .foregroundColor(.black)
                         
-                        Text("School: \(onboardingVM.schoolActual)")
+                        Text("School: \(onboardingVM.infoBus.school)")
                             .fontWeight(.black)
                             .font(.custom("HoeflerText-Regular", size: 26))
                             .opacity(0.75)
@@ -102,7 +102,7 @@ struct ProfileView: View {
                     .padding(.top, 25)
                     
                     Spacer()
-                    Spacer()
+                    Spacer() //you gotta trust i promise this works
                     Spacer()
                     Spacer()
                     Spacer()
@@ -114,13 +114,6 @@ struct ProfileView: View {
                     Picker("", selection: $selectedTab) {
                         ForEach(selections, id: \.self) { selection in
                             Text(selection).tag(selection)
-//                            Task {
-//                                if (selectedTab == "My Listings"){
-//                                    await vm.getMyListings(username: onboardingVM.usernameActual)
-//                                } else {
-//                                    await vm.getMyHeartListings(username: onboardingVM.usernameActual)
-//                                }
-//                            }
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
@@ -129,7 +122,6 @@ struct ProfileView: View {
                     .onChange(of: selectedTab) {
                         vm.allowProfileSubcardInit()
                     }
-                    // .padding(.top, 130)
                     
                     VStack {
                         if selectedTab == "My Listings" {
@@ -151,7 +143,8 @@ struct ProfileView: View {
                             
                         }
                     }
-                    .frame(width: 1200, height: 225)
+                    .frame(maxWidth: .infinity, minHeight: 225, maxHeight: 225)
+                    
                 }
                 .offset(x: 0, y: 185)
             }

@@ -19,25 +19,18 @@ class OnboardingViewModel: ObservableObject {
     @Published var AuthToken: String = ""
     @Published var usernameActual: String = "A"
     var schoolActual: String = "UNC Chapel Hill"
+    var infoBus: profileInfoForApi = profileInfoForApi(username: "", school: "", jwt: "")
     
     let Schools: [String] = ["UNC Chapel Hill", "UNC Charlotte", "Duke", "NC State"]
     
     func signup() async {
-//        //add API functionality
-//        print("---------------------------")
-//        print("Attempted Signup")
-//        print("Username: \(usernameInput)")
-//        print("Password: \(passwordInput)")
-//        print("School:")
-//        print("---------------------------")
-//
-//
         do {
             let response = try await OnboardingModel.signupAPIRequest(usernameInput: usernameInput, passwordInput: passwordInput, schoolInput: schoolInput)
             if response.stackTrace == nil {
                 AuthToken = response.accessToken!
                 userID = response._id!
                 usernameActual = usernameInput
+                infoBus = profileInfoForApi(username: usernameInput, school: schoolInput, jwt: AuthToken)
                 isUserLoggedIn = true
             } else {
                 errormsg = "Error: \(response.message!)"
@@ -50,13 +43,6 @@ class OnboardingViewModel: ObservableObject {
     }
     
     func login() async {
-        // add API functionality
-//        print("---------------------------")
-//        print("Attempted Login")
-//        print("Username: \(usernameInput)")
-//        print("Password: \(passwordInput)")
-//        print("---------------------------")
-        
         do {
             let response = try await OnboardingModel.loginAPIRequest(usernameInput: usernameInput, passwordInput: passwordInput)
             if response.stackTrace == nil {
@@ -64,6 +50,7 @@ class OnboardingViewModel: ObservableObject {
                 userID = response._id!
                 usernameActual = usernameInput
                 schoolActual = response.school!
+                infoBus = profileInfoForApi(username: usernameInput, school: schoolInput, jwt: AuthToken)
                 isUserLoggedIn = true
             } else {
                 errormsg = "Error: \(response.message!)"

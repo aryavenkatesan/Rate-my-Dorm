@@ -18,7 +18,7 @@ struct BottomBarView: View {
         UITabBar.appearance().isHidden = true
         self.Onboardingvm = onboardingVM
         self.Rentvm = rentVM
-        print(self.Onboardingvm.schoolActual)
+        self.Rentvm.APIInfoBus = self.Onboardingvm.infoBus
     }
 
     var body: some View {
@@ -27,11 +27,11 @@ struct BottomBarView: View {
             Group {
                 switch self.currentTab {
                 case .Sublease:
-                    SubleaseView(vm: self.Rentvm, username: self.Onboardingvm.usernameActual, school: self.Onboardingvm.schoolActual)
+                    SubleaseView(vm: self.Rentvm)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.yellow.opacity(0.2))
                 case .Rent:
-                    SearchView(vm: self.Rentvm, username: self.Onboardingvm.usernameActual, school: self.Onboardingvm.schoolActual)
+                    SearchView(vm: self.Rentvm)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                        .background(Color.blue.opacity(0.2))
                 case .Profile:

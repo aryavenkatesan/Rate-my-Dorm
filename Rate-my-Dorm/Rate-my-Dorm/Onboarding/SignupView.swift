@@ -21,9 +21,7 @@ struct SignupView: View {
                 
                 Spacer()
                 
-//                Image("AppLogo")
                 Text("Signup!")
-                    //                    .font(.system(.title, design: .rounded, weight: .bold))
                     .font(.custom("BubbleShineRegular", size: 100))
                     .fontWeight(.bold)
                     .opacity(0.75)
@@ -31,9 +29,6 @@ struct SignupView: View {
                     .padding(32)
                     .foregroundColor(.black)
                 
-//                Spacer()
-                
-//                Spacer()
                 
                 Spacer()
                 
@@ -64,7 +59,6 @@ struct SignupView: View {
                     } else {
                         Task {
                             await vm.signup()
-//                            vm.resetError()
                         }
                     }
                 } label: {
@@ -82,9 +76,7 @@ struct SignupView: View {
                     .padding(16)
                 
                 Spacer()
-                
                 Spacer()
-                
                 Spacer()
             }
             .padding()

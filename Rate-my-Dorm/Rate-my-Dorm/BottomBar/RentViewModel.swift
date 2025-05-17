@@ -20,17 +20,17 @@ class RentViewModel: ObservableObject {
     @Published var newSubleasePhoneNumber: String = ""
     @Published var newSubleaseRating: Int = 0
     @Published var newSubleaseComments: String = ""
-    @Published var schoolName: String = "UNC Chapel Hill" // this may be the root cause of the school problem. Either here or in bottom bar view init
     var initializeProfileSubcards: Bool = true
+    var APIInfoBus: profileInfoForApi = profileInfoForApi(username: "", school: "", jwt: "")
 
-    func add(username: String) async {
+    func add() async { //APIInfoBus: profileInfoForApi
         guard let price = newSubleasePrice, let distance = newSubleaseDistance else {
             print("Price or distance is nil. Cannot add sublease.")
             return
         }
         
         var newSublease = Sublease(
-            creatorUsername: username,
+            creatorUsername: APIInfoBus.username,
             name: newSubleaseName,
             address: newSubleaseAddress,
             price: newSubleasePrice!,
@@ -41,11 +41,11 @@ class RentViewModel: ObservableObject {
             phoneNumber: newSubleasePhoneNumber,
             rating: newSubleaseRating,
             comments: newSubleaseComments,
-            school: schoolName)
+            school: APIInfoBus.school)
         
         do {
             resetSublease()
-            let response = try await ProfileModel.uploadListingAPIRequest(listingInput: newSublease, usernameActual: username, schoolActual: schoolName)
+            let response = try await ProfileModel.uploadListingAPIRequest(listingInput: newSublease, APIInfoBus: APIInfoBus)
         } catch {
             print("Something went wrong 1")
         }
@@ -63,19 +63,19 @@ class RentViewModel: ObservableObject {
         newSubleaseComments = ""
     }
 
-    func toggleLike(sublease: Sublease, username: String) async {
+    func toggleLike(sublease: Sublease) async {
         for index in subleases.indices {
             if subleases[index].id == sublease.id {
-                if subleases[index].heartList.contains(username) {
-                    subleases[index].heartList.removeAll { $0 == username }
+                if subleases[index].heartList.contains(APIInfoBus.username) {
+                    subleases[index].heartList.removeAll { $0 == APIInfoBus.username }
                 } else {
-                    subleases[index].heartList.append(username)
+                    subleases[index].heartList.append(APIInfoBus.username)
                 }
             }
         }
         
         do {
-            _ = try await ProfileModel.flipHeartStatusAPIRequest(listingInput: sublease, user: username)
+            _ = try await ProfileModel.flipHeartStatusAPIRequest(listingInput: sublease, APIInfoBus: APIInfoBus)
 //            await getAllSubleases()
             // let errmsg = response  This is not used
         } catch {
@@ -85,12 +85,13 @@ class RentViewModel: ObservableObject {
     
     func getAllSubleases() async {
         do {
-            let response = try await ProfileModel.getAllListingsAPIRequest()
+            let response = try await ProfileModel.getAllListingsAPIRequest(APIInfoBus: APIInfoBus)
             
             var output: [Sublease] = []
             
+                //Change this to do sorting within the database to make it faster and less glitchy
             for s in response { // filter for only this school
-                if s.school == schoolName {
+                if s.school == APIInfoBus.school {
                     output.append(s)
                 }
             }
@@ -101,26 +102,26 @@ class RentViewModel: ObservableObject {
         }
     }
     
-    func getMyListings(username: String) async {
+    func getMyListings() async {
         Task {
             await getAllSubleases()
         }
         var output: [Sublease] = []
         for s in subleases {
-            if s.creatorUsername == username {
+            if s.creatorUsername == APIInfoBus.username {
                 output.append(s)
             }
         }
         subleases = output
     }
     
-    func getMyHeartListings(username: String) async {
+    func getMyHeartListings() async {
         Task {
             await getAllSubleases()
         }
         var output: [Sublease] = []
         for s in subleases {
-            if s.heartList.contains(username) {
+            if s.heartList.contains(APIInfoBus.username) {
                 output.append(s)
             }
         }
@@ -129,17 +130,14 @@ class RentViewModel: ObservableObject {
     
     func deleteListing(sublease: Sublease) async {
         do {
-            let errmsg = try await ProfileModel.deleteAPIRequest(listingInput: sublease)
+            let errmsg = try await ProfileModel.deleteAPIRequest(listingInput: sublease, APIInfoBus: APIInfoBus)
             
         } catch {
             print("Something went wrong 4")
         }
     }
     
-    func allowProfileSubcardInit() {
+    func allowProfileSubcardInit() { 
         initializeProfileSubcards = true
-    }
-    func goDuke() {
-        schoolName = "Duke"
     }
 }
