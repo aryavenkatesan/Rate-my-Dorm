@@ -12,11 +12,11 @@ import MapKit
 struct SubleaseMapView: View {
     let sublease: Sublease
     let coordinate: CLLocationCoordinate2D
-
+    
     @Environment(\.dismiss) var dismiss
-
+    
     @State private var region: MKCoordinateRegion
-
+    
     init(sublease: Sublease, coordinate: CLLocationCoordinate2D) {
         self.sublease = sublease
         self.coordinate = coordinate
@@ -25,7 +25,7 @@ struct SubleaseMapView: View {
             span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         ))
     }
-
+    
     var body: some View {
         Map(coordinateRegion: $region, annotationItems: [sublease]) { _ in
             MapMarker(coordinate: coordinate, tint: .blue)
@@ -42,16 +42,16 @@ struct SubleaseMapView: View {
                             .font(.title)
                             .foregroundColor(.primary)
                     }
-
+                    
                     Spacer()
-
+                    
                     Text(sublease.name)
                         .font(.headline)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
-
+                    
                     Spacer()
-
+                    
                     // Invisible to balance the HStack
                     Image(systemName: "xmark.circle.fill")
                         .font(.title)
@@ -62,7 +62,7 @@ struct SubleaseMapView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
                 .padding(.top, 16)
-
+                
                 Spacer()
             }
         }
@@ -78,7 +78,7 @@ struct SubleaseMapView: View {
                         .background(.ultraThinMaterial)
                         .clipShape(Circle())
                 }
-
+                
                 Button(action: {
                     region.span.latitudeDelta *= 1.5
                     region.span.longitudeDelta *= 1.5

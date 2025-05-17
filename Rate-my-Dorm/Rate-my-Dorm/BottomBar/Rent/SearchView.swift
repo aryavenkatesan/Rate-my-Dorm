@@ -5,31 +5,28 @@ import SwiftUI
 struct SearchView: View {
     @ObservedObject var vm: RentViewModel
     @State private var showFilterSheet = false
-
     @State private var searchText: String = ""
     @State private var maxPrice: Double = 5000
     @State private var maxDistance: Double = 50
     @State private var selectedType: PropertyType? = nil
     @State private var minRating: Int = 0
-
     @State private var showResults: Bool = false
-
     @State private var latitude: Double?
     @State private var longitude: Double?
     @State private var coordinatesFetched: Bool = false // New state variable
-
+    
     var filteredSubleases: [Sublease] {
         vm.subleases.filter { sublease in
             (searchText.isEmpty ||
-                sublease.name.localizedCaseInsensitiveContains(searchText) ||
-                sublease.address.localizedCaseInsensitiveContains(searchText)) &&
-                sublease.price <= maxPrice &&
-                sublease.distance <= maxDistance &&
-                sublease.rating >= minRating &&
-                (selectedType == nil || sublease.propertyType == selectedType!)
+             sublease.name.localizedCaseInsensitiveContains(searchText) ||
+             sublease.address.localizedCaseInsensitiveContains(searchText)) &&
+            sublease.price <= maxPrice &&
+            sublease.distance <= maxDistance &&
+            sublease.rating >= minRating &&
+            (selectedType == nil || sublease.propertyType == selectedType!)
         }
     }
-
+    
     func geocode(address: String) {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address) { placemarks, _ in
@@ -44,7 +41,7 @@ struct SearchView: View {
             }
         }
     }
-
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 12) {
@@ -53,7 +50,7 @@ struct SearchView: View {
                         .padding(8)
                         .background(Color.blue.opacity(0.05))
                         .cornerRadius(10)
-
+                    
                     HStack {
                         Button("Filters") {
                             showFilterSheet = true
@@ -67,9 +64,9 @@ struct SearchView: View {
                                 minRating: $minRating
                             )
                         }
-
+                        
                         Spacer()
-
+                        
                         Button("Search") {
                             Task {
                                 await vm.getAllSubleases()
@@ -81,7 +78,7 @@ struct SearchView: View {
                     }
                 }
                 .padding(.horizontal)
-
+                
                 if showResults {
                     ScrollView {
                         LazyVStack(spacing: 12) {
@@ -110,6 +107,6 @@ struct SearchView: View {
 #Preview {
     let previewvm1 = OnboardingViewModel()
     let previewvm2 = RentViewModel()
-
+    
     BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
 }

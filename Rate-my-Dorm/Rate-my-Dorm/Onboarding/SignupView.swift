@@ -32,18 +32,18 @@ struct SignupView: View {
                 
                 Spacer()
                 
-                //            Divider()
+
                 TextField("Username", text: $vm.usernameInput)
                     .padding(16)
                     .background(Color.blue.opacity(0.05))
                     .cornerRadius(30)
-                //            Divider()
+
                 SecureField("Password", text: $vm.passwordInput)
                     .textContentType(.password)
                     .padding(16)
                     .background(Color.blue.opacity(0.05))
                     .cornerRadius(30)
-                //            Divider()
+
                 Picker("School", selection: $vm.schoolInput) {
                     ForEach(vm.Schools, id: \.self) { school in
                         Text(school)

@@ -13,14 +13,20 @@ struct BottomBarView: View {
     @Namespace var animation
     @ObservedObject var Onboardingvm: OnboardingViewModel
     @ObservedObject var Rentvm: RentViewModel
-
+    
     init(onboardingVM: OnboardingViewModel, rentVM: RentViewModel) {
         UITabBar.appearance().isHidden = true
         self.Onboardingvm = onboardingVM
         self.Rentvm = rentVM
         self.Rentvm.APIInfoBus = self.Onboardingvm.infoBus
+        
+        self.Rentvm.timeoutCallback = {
+            Task { @MainActor in
+                onboardingVM.timedout()
+            }
+        }
     }
-
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             // Show the current view full screen.
@@ -29,19 +35,19 @@ struct BottomBarView: View {
                 case .Sublease:
                     SubleaseView(vm: self.Rentvm)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                        .background(Color.yellow.opacity(0.2))
+                    //                        .background(Color.yellow.opacity(0.2))
                 case .Rent:
                     SearchView(vm: self.Rentvm)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                        .background(Color.blue.opacity(0.2))
+                    //                        .background(Color.blue.opacity(0.2))
                 case .Profile:
                     ProfileView(onboardingVM: self.Onboardingvm, vm: self.Rentvm)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                        .background(Color.green.opacity(0.2))
+                    //                        .background(Color.green.opacity(0.2))
                 }
             }
             .ignoresSafeArea() // Make sure the content goes full screen
-
+            
             // Custom bottom bar
             HStack {
                 ForEach(Tab.allCases, id: \.rawValue) { tab in
@@ -60,7 +66,7 @@ struct BottomBarView: View {
         }
         .ignoresSafeArea(edges: .bottom)
     }
-
+    
     // Helper function for safe area insets
     func getSafeArea() -> UIEdgeInsets {
         guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -78,6 +84,7 @@ struct TabButton: View {
     var animation: Namespace.ID
     var body: some View {
         Button(action: {
+            //this is super finicky, know that it could be done better but its not really worth the headache
             withAnimation(.smooth(duration: 0.3, extraBounce: 0.25)) {
                 self.currentTab = self.tab
             }
@@ -87,8 +94,6 @@ struct TabButton: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 25, height: 25)
                 .foregroundColor(self.currentTab == self.tab ? .primary : .gray)
-            // Optional: Reserve a fixed frame for the icon so spacing is consistent.
-            // .frame(width: 50, height: 50)
         }
         .contentShape(Rectangle())
     }
@@ -108,8 +113,6 @@ struct LabelImpl: View {
                         .foregroundColor(.primary)
                         .matchedGeometryEffect(id: "TAB_LABEL", in: self.animation)
                         .lineLimit(1)
-                        // fixedSize(horizontal: true, vertical: false) means the text
-                        // always uses its intrinsic size. It may render outside the container.
                         .fixedSize(horizontal: true, vertical: true)
                         .allowsTightening(true)
                 }.frame(width: 40)
@@ -128,7 +131,7 @@ struct BottomBarView_Previews: PreviewProvider {
     static var previews: some View {
         let previewvm1 = OnboardingViewModel()
         let previewvm2 = RentViewModel()
-
+        
         BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
     }
 }

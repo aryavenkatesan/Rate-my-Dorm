@@ -8,9 +8,8 @@ class RentViewModel: ObservableObject {
         Sublease(creatorUsername: "user123", name: "Union Apts", address: "425 Hillsborough Street, Chapel Hill, NC, 27514", price: 850, distance: 0.9, propertyType: .apartment, contactEmail: "contact@union.com", heartList: ["username"], phoneNumber: "123-456-7890", school: "UNC Chapel Hill"),
         Sublease(creatorUsername: "user123", name: "Ram Village 1", address: "560 Paul Hardin Dr, Chapel Hill, NC, 27514", price: 950, distance: 0.6, propertyType: .dorm, contactEmail: "dorm@unc.edu", heartList: ["username"], phoneNumber: "234-567-8901", school: "UNC Chapel Hill"),
         Sublease(creatorUsername: "user123", name: "Horace Williams House", address: "610 E Rosemary St, Chapel Hill, NC, 27514", price: 950, distance: 0.7, propertyType: .house, contactEmail: "info@horacehouse.com", heartList: ["username"], phoneNumber: "345-678-9012", school: "UNC Chapel Hill")
-    ]
-    // @Published var subleases: [Sublease] = []
-        
+    ] //fake data that gets rewritten
+    
     @Published var newSubleaseName: String = ""
     @Published var newSubleaseAddress: String = ""
     @Published var newSubleasePrice: Double? = nil
@@ -22,14 +21,17 @@ class RentViewModel: ObservableObject {
     @Published var newSubleaseComments: String = ""
     var initializeProfileSubcards: Bool = true
     var APIInfoBus: profileInfoForApi = profileInfoForApi(username: "", school: "", jwt: "")
-
+    var timeoutCallback: (() -> Void) = {
+        print("Default timeout handler - no action taken")
+    }
+    
     func add() async { //APIInfoBus: profileInfoForApi
-        guard let price = newSubleasePrice, let distance = newSubleaseDistance else {
+        guard let price = newSubleasePrice, let distance = newSubleaseDistance else { //change this to be better
             print("Price or distance is nil. Cannot add sublease.")
             return
         }
         
-        var newSublease = Sublease(
+        let newSublease = Sublease(
             creatorUsername: APIInfoBus.username,
             name: newSubleaseName,
             address: newSubleaseAddress,
@@ -45,12 +47,15 @@ class RentViewModel: ObservableObject {
         
         do {
             resetSublease()
-            let response = try await ProfileModel.uploadListingAPIRequest(listingInput: newSublease, APIInfoBus: APIInfoBus)
+            let response = try await BackendConnection.uploadListingAPIRequest(listingInput: newSublease, APIInfoBus: APIInfoBus)
+            if response == "unauthorized" {
+                timeoutCallback()
+            }
         } catch {
             print("Something went wrong 1")
         }
     }
-
+    
     func resetSublease() {
         newSubleaseName = ""
         newSubleaseAddress = ""
@@ -62,7 +67,7 @@ class RentViewModel: ObservableObject {
         newSubleaseRating = 0
         newSubleaseComments = ""
     }
-
+    
     func toggleLike(sublease: Sublease) async {
         for index in subleases.indices {
             if subleases[index].id == sublease.id {
@@ -75,9 +80,10 @@ class RentViewModel: ObservableObject {
         }
         
         do {
-            _ = try await ProfileModel.flipHeartStatusAPIRequest(listingInput: sublease, APIInfoBus: APIInfoBus)
-//            await getAllSubleases()
-            // let errmsg = response  This is not used
+            let response = try await BackendConnection.flipHeartStatusAPIRequest(listingInput: sublease, APIInfoBus: APIInfoBus)
+            if response == "Unauthorized" {
+                timeoutCallback()
+            }
         } catch {
             print("Something went wrong 2")
         }
@@ -85,17 +91,28 @@ class RentViewModel: ObservableObject {
     
     func getAllSubleases() async {
         do {
-            let response = try await ProfileModel.getAllListingsAPIRequest(APIInfoBus: APIInfoBus)
+            let response = try await BackendConnection.getAllListingsAPIRequest(APIInfoBus: APIInfoBus)
+            
+            do {
+                // Check if array has elements and safely access the first one
+                if let firstResponse = response.first, firstResponse.name == "Unauthorized" {
+                    timeoutCallback()
+                }
+            } catch {
+                // Silent error handling
+            }
+            
             
             var output: [Sublease] = []
             
-                //Change this to do sorting within the database to make it faster and less glitchy
-            for s in response { // filter for only this school
+            //Change this to do sorting within the database to make it faster and less glitchy
+            for s in response {
+                // filter for only currently selected school
                 if s.school == APIInfoBus.school {
                     output.append(s)
                 }
             }
-       
+            
             subleases = output
         } catch {
             print("Something went wrong 3")
@@ -130,14 +147,18 @@ class RentViewModel: ObservableObject {
     
     func deleteListing(sublease: Sublease) async {
         do {
-            let errmsg = try await ProfileModel.deleteAPIRequest(listingInput: sublease, APIInfoBus: APIInfoBus)
+            let errmsg = try await BackendConnection.deleteAPIRequest(listingInput: sublease, APIInfoBus: APIInfoBus)
+            if errmsg == "Unauthorized" {
+                timeoutCallback()
+            }
+            print(errmsg)
             
         } catch {
             print("Something went wrong 4")
         }
     }
     
-    func allowProfileSubcardInit() { 
+    func allowProfileSubcardInit() {
         initializeProfileSubcards = true
     }
 }

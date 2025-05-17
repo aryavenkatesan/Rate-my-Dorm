@@ -19,7 +19,7 @@ struct SubleaseListView: View {
         self.username = username
         
         if vm.initializeProfileSubcards {
-            
+            //this is necessary bc the api will keep calling since the API call changes a State variable, so swift has to rerender, but each rerender causes another rerender and will break our backend. This extra code will make it only call once every time the toggle is switched. In other words, trust
             Task {
                 await vm.getAllSubleases()
             }
@@ -78,6 +78,5 @@ struct SubleaseListView: View {
             }
             .padding(.top)
         }
-        // Remove the .id modifier
     }
 }

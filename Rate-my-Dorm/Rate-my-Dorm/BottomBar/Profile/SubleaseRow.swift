@@ -45,7 +45,6 @@ struct SubleaseRow: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
-            //.padding(.trailing, 80)
             
             Spacer()
             
@@ -76,6 +75,6 @@ struct SubleaseRow: View {
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
         .padding(.horizontal)
-        .frame(width: UIScreen.main.bounds.width)
+        .frame(width: UIScreen.main.bounds.width) //UIScreen.main.bounds.width my goat tbh
     }
 }

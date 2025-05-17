@@ -22,20 +22,20 @@ struct LoginView: View {
                     .padding(32)
                     .foregroundColor(.black)
                 Spacer()
-
+                
                 Image("AppLogo")
                 
                 Spacer()
                 Spacer()
                 Spacer()
-                    
+                
                 VStack {
                     TextField("Username", text: $vm.usernameInput)
                         .padding(16)
                         .background(Color.blue.opacity(0.05))
                         .cornerRadius(30)
                     
-
+                    
                     Text("")
                     
                     SecureField("Password", text: $vm.passwordInput)
@@ -53,16 +53,16 @@ struct LoginView: View {
                         if vm.usernameInput.isEmpty || vm.passwordInput.isEmpty {
                             vm.fieldError()
                             /* ------------------------
-                              //This is for font debugging don't delete
+                             //This is for font debugging don't delete
                              for familyName in UIFont.familyNames {
-                                 print(familyName)
-                                
-                                 for fontName in UIFont.fontNames(forFamilyName: familyName) {
-                                    
-                                     print("-- \(fontName)")
-                                 }
+                             print(familyName)
+                             
+                             for fontName in UIFont.fontNames(forFamilyName: familyName) {
+                             
+                             print("-- \(fontName)")
                              }
-                              ------------------------ */
+                             }
+                             ------------------------ */
                         } else {
                             Task {
                                 await vm.login()
@@ -94,7 +94,7 @@ struct LoginView: View {
         }
     }
 }
-    
+
 #Preview {
     @Previewable @StateObject var previewvm = OnboardingViewModel()
     LoginView(vm: previewvm)

@@ -13,12 +13,12 @@ struct SubleaseCardView: View {
     let sublease: Sublease
     let username: String
     @ObservedObject var vm: RentViewModel
-
+    
     @State private var latitude: Double?
     @State private var longitude: Double?
     @State private var coordinatesFetched = false
     @State private var showMapSheet = false
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -29,7 +29,7 @@ struct SubleaseCardView: View {
                     Text("$\(Int(sublease.price)) · \(Int(sublease.distance)) mi")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-
+                    
                     HStack(spacing: 2) {
                         ForEach(0 ..< 5) { i in
                             Image(systemName: i < sublease.rating ? "star.fill" : "star")
@@ -37,14 +37,14 @@ struct SubleaseCardView: View {
                         }
                     }
                     .font(.caption)
-
+                    
                     if !sublease.comments.isEmpty {
                         Text("“\(sublease.comments)”")
                             .font(.footnote)
                             .italic()
                             .foregroundColor(.gray)
                     }
-
+                    
                     Text(sublease.contactEmail)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
@@ -56,7 +56,7 @@ struct SubleaseCardView: View {
                         // Text("Latitude: \(latitude ?? 0), Longitude: \(longitude ?? 0)")
                         // .font(.footnote)
                         // .foregroundColor(.blue)
-
+                        
                         Button("Open Map") {
                             showMapSheet = true
                         }
@@ -69,7 +69,7 @@ struct SubleaseCardView: View {
                         }
                     }
                 }
-
+                
                 Spacer()
                 Button {
                     Task {
@@ -92,7 +92,7 @@ struct SubleaseCardView: View {
             }
         }
     }
-
+    
     private func geocode(address: String) {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address) { placemarks, _ in

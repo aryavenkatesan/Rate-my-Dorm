@@ -11,7 +11,7 @@ enum Tab: String, CaseIterable {
     case Sublease = "house"
     case Rent = "key"
     case Profile = "person"
-
+    
     var tabName: String {
         switch self {
         case .Sublease:

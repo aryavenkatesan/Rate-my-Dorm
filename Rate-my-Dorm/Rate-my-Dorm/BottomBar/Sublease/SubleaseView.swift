@@ -3,10 +3,10 @@ import SwiftUI
 struct SubleaseView: View {
     @ObservedObject var vm: RentViewModel
     @Environment(\.dismiss) private var dismiss
-
+    
     @State private var statusMessage: String = ""
     @State private var statusMessageColor: Color = .clear
-
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -19,54 +19,54 @@ struct SubleaseView: View {
                                   value: $vm.newSubleasePrice,
                                   format: .number,
                                   prompt: Text("Rent per month"))
-                            .keyboardType(.decimalPad)
+                        .keyboardType(.decimalPad)
                         TextField("",
                                   value: $vm.newSubleaseDistance,
                                   format: .number,
                                   prompt: Text("Miles from campus"))
-                            .keyboardType(.decimalPad)
+                        .keyboardType(.decimalPad)
                     }
                     .padding()
                     .background(Color.blue.opacity(0.1))
                     .cornerRadius(10)
-
+                    
                     // Email (Mandatory)
                     TextField("Email", text: $vm.newSubleaseEmail)
                         .keyboardType(.emailAddress)
                         .padding()
                         .background(Color.blue.opacity(0.1))
                         .cornerRadius(10)
-
+                    
                     // Phone Number (Mandatory)
                     TextField("Phone Number", text: $vm.newSubleasePhoneNumber)
                         .keyboardType(.phonePad)
                         .padding()
                         .background(Color.blue.opacity(0.1))
                         .cornerRadius(10)
-
+                    
                     // Comments (Optional)
                     TextField("Comments (optional)", text: $vm.newSubleaseComments, axis: .vertical)
                         .padding()
                         .background(Color.blue.opacity(0.1))
                         .cornerRadius(10)
-
+                    
                     // Type Picker
                     Text("Type")
                         .font(.headline)
                         .frame(maxWidth: .infinity, alignment: .leading)
-
+                    
                     Picker("Type", selection: $vm.newSubleasePropertyType) {
                         ForEach(PropertyType.allCases, id: \.self) { type in
                             Text(type.rawValue.capitalized).tag(type)
                         }
                     }
                     .pickerStyle(.segmented)
-
+                    
                     // Rating Picker (Optional)
                     Text("Rating")
                         .font(.headline)
                         .frame(maxWidth: .infinity, alignment: .leading)
-
+                    
                     HStack {
                         ForEach(1 ... 5, id: \.self) { star in
                             Image(systemName: vm.newSubleaseRating >= star ? "star.fill" : "star")
@@ -80,7 +80,7 @@ struct SubleaseView: View {
                                 }
                         }
                     }
-
+                    
                     // Add Sublease Button
                     Button {
                         Task {
@@ -96,13 +96,13 @@ struct SubleaseView: View {
                     }
                     .disabled(
                         vm.newSubleaseName.isEmpty ||
-                            vm.newSubleaseAddress.isEmpty ||
-                            vm.newSubleaseEmail.isEmpty ||
-                            vm.newSubleasePhoneNumber.isEmpty ||
-                            vm.newSubleasePrice == nil ||
-                            vm.newSubleaseDistance == nil
+                        vm.newSubleaseAddress.isEmpty ||
+                        vm.newSubleaseEmail.isEmpty ||
+                        vm.newSubleasePhoneNumber.isEmpty ||
+                        vm.newSubleasePrice == nil ||
+                        vm.newSubleaseDistance == nil
                     )
-
+                    
                     // Status Message
                     if !statusMessage.isEmpty {
                         Text(statusMessage)
@@ -114,10 +114,6 @@ struct SubleaseView: View {
                 .padding(.bottom, 60)
             }
             .navigationTitle("New Sublease")
-//            .onAppear(){ //tagged for deletion
-//                vm.schoolName = APIInfoBus.school
-//            }
-            // .background(Color(red: 0.9, green: 0.95, blue: 1.0))
         }
     }
 }
@@ -125,6 +121,6 @@ struct SubleaseView: View {
 #Preview {
     let previewvm1 = OnboardingViewModel()
     let previewvm2 = RentViewModel()
-
+    
     BottomBarView(onboardingVM: previewvm1, rentVM: previewvm2)
 }

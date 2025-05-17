@@ -38,8 +38,6 @@ class OnboardingViewModel: ObservableObject {
         } catch {
             errormsg = "Error: Something went wrong"
         }
-        
-        // resetFields()
     }
     
     func login() async {
@@ -91,5 +89,9 @@ class OnboardingViewModel: ObservableObject {
         userID = ""
         AuthToken = ""
         resetAll()
+    }
+    public func timedout() { //pass as closure to the rent ViewModel
+        logout()
+        errormsg = "Session timed out, please log in again"
     }
 }

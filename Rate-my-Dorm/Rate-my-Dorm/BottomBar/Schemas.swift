@@ -4,6 +4,32 @@
 //
 //  Created by Arya Venkatesan on 5/16/25.
 //
+import Foundation
+
+// MARK: - Sublease schemas
+struct Sublease: Identifiable {
+    let id = UUID()
+    let creatorUsername: String
+    var name: String
+    var address: String
+    var price: Double
+    var distance: Double
+    var propertyType: PropertyType
+    let contactEmail: String
+    var heartList: [String]
+    var phoneNumber: String
+    var rating: Int = 0
+    var comments: String = ""
+    var school: String
+    var idCopy: String?
+}
+
+enum PropertyType: String, CaseIterable, Codable {
+    case apartment
+    case dorm
+    case house
+}
+// MARK: - API response schemas
 
 struct ListingResponseJSON: Decodable {
     let accessToken: String?
@@ -74,7 +100,8 @@ struct ListingJSONResponse: Codable {
     let __v: Int
 }
 
-struct profileInfoForApi: Codable { //da bus
+// MARK: - Da Bus
+struct profileInfoForApi: Codable { 
     let username: String
     let school: String
     let jwt: String
