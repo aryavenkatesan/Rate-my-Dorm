@@ -11,7 +11,7 @@ enum BackendConnection {
     static let decoder = JSONDecoder()
     static let encoder = JSONEncoder()
     
-    static let baseUrl = "http://localhost:5001/" //change this when deploying
+    static let baseUrl = "18.220.39.92:5001/" 
     
     static func uploadListingAPIRequest(listingInput: Sublease, APIInfoBus: profileInfoForApi) async throws -> String {
         let workingUrl = baseUrl + "api/listing/create"

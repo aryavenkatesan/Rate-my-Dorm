@@ -10,7 +10,7 @@ enum OnboardingModel {
     static let decoder = JSONDecoder()
     static let encoder = JSONEncoder()
     
-    static let baseUrl = "http://localhost:5001/"
+    static let baseUrl = "18.220.39.92:5001/"
     
     static func signupAPIRequest(usernameInput: String, passwordInput: String, schoolInput: String) async throws -> LoginResponseJSON {
         let workingUrl = baseUrl + "api/users/register"
