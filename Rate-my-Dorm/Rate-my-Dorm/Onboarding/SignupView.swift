@@ -85,7 +85,7 @@ struct SignupView: View {
     }
 }
 
-#Preview {
-    @Previewable @StateObject var previewvm = OnboardingViewModel()
-    SignupView(vm: previewvm)
-}
+//#Preview {
+//    @Previewable @StateObject var previewvm = OnboardingViewModel()
+//    SignupView(vm: previewvm)
+//}

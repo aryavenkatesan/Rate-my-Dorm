@@ -4,6 +4,15 @@ const connectDb = require("./config/dbConnection")
 const dotenv = require("dotenv").config();
 const cors = require('cors');
 
+//to enable https
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
+
 
 connectDb();
 
@@ -24,6 +33,6 @@ app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/listing", require("./routes/listingRoutes"))
 app.use(errorHandler);
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+https.createServer(options, app).listen(port, () => {
+    console.log(`HTTPS Server running on port ${port}`);
 });

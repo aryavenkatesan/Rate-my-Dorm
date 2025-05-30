@@ -119,9 +119,9 @@ struct ProfileView: View {
                     .pickerStyle(SegmentedPickerStyle())
                     .frame(maxWidth: 240)
                     .padding(.horizontal, 20)
-                    .onChange(of: selectedTab) {
-                        vm.allowProfileSubcardInit()
-                    }
+//                    .onChange(of: selectedTab) {
+//                        vm.allowProfileSubcardInit()
+//                    }
                     
                     VStack {
                         //theres def a way to make it more consise eg. showTrashButton takes "My Listings" or "HeartedListings" and figures out what button to show within the SubleaseListView, but this works and is lowk clearer

@@ -55,6 +55,8 @@ class OnboardingViewModel: ObservableObject {
             }
         } catch {
             errormsg = "Error: Something went wrong"
+            print("\(error)")
+            print("\(error.localizedDescription)")
         }
         
         // resetFields()
