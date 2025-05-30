@@ -24,7 +24,6 @@ struct ContentView: View {
 
 /*
  Make colors on BottomBarView correspond to the current school
- Push to cloud instead of localhost
  Make BottomBarView screens not part of navigation so the app will work on iPad
  */
 

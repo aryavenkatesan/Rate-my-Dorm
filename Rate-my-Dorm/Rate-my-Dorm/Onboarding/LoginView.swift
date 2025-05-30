@@ -95,7 +95,7 @@ struct LoginView: View {
     }
 }
 
-#Preview {
-    @Previewable @StateObject var previewvm = OnboardingViewModel()
-    LoginView(vm: previewvm)
-}
+//#Preview { commenting so I can run this app on iOS 16
+//    @Previewable @StateObject var previewvm = OnboardingViewModel()
+//    LoginView(vm: previewvm)
+//}

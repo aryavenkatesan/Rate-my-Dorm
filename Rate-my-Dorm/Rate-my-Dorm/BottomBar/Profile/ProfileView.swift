@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ProfileView: View {
     var onboardingVM: OnboardingViewModel
@@ -18,9 +19,8 @@ struct ProfileView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(.blue)
+                Color(red: 135/255, green: 180/255, blue: 235/255, opacity: 0.25)
                     .ignoresSafeArea()
-                    .opacity(0.15)
                 
                 // This won't work on other screen sizes
                 // me from the future: it actually does for whatever reason
@@ -67,6 +67,22 @@ struct ProfileView: View {
                     .opacity(1))
                 .clipShape(.capsule)
                 .offset(x: 120, y: -370)
+                
+//                Button {
+//                    print("logout")
+//                } label: {
+//                    HStack {
+//                        Text("")
+//                    }
+//                    .frame(height: 9999) // Fixed height
+//                    .frame(width: 9999)
+//                }
+//                .background(Color(.white)
+//                    .opacity(1))
+//                .clipShape(.rect)
+//                .zIndex(0)
+                
+                
                 
                 VStack {
                     Spacer()
@@ -119,9 +135,9 @@ struct ProfileView: View {
                     .pickerStyle(SegmentedPickerStyle())
                     .frame(maxWidth: 240)
                     .padding(.horizontal, 20)
-//                    .onChange(of: selectedTab) {
-//                        vm.allowProfileSubcardInit()
-//                    }
+                    .onChange(of: selectedTab) { _ in
+                        vm.allowProfileSubcardInit()
+                    }
                     
                     VStack {
                         //theres def a way to make it more consise eg. showTrashButton takes "My Listings" or "HeartedListings" and figures out what button to show within the SubleaseListView, but this works and is lowk clearer
@@ -146,6 +162,8 @@ struct ProfileView: View {
                     
                 }
                 .offset(x: 0, y: 185)
+                
+                
             }
             .onAppear {
                 Task {
